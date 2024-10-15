@@ -1,0 +1,314 @@
+*******************exam practice******************
+
+declare
+    v_basic_percent number := 45;
+    v_pf_percent number :=12;
+    v_fname varchar2(15);
+    v_emp_sal number (10);
+    begin
+    select first_name,salary into v_fname, v_emp_sal
+    from employees
+    where employee_id = 110;
+   dbms_output.put_line( 'salary is : '|| v_emp_sal|| ' '||' provident found : '||v_pf_percent* v_emp_sal/100*v_pf_percent/100);
+   end;
+   /
+
+..............................
+
+declare
+    v_max_deptno number := &deptid;
+    begin
+    select department_id into v_max_deptno
+    from departments
+    where department_id = v_max_deptno;
+    dbms_output.put_line( 'The maximum department_Id is : '||v_max_deptno);
+    end;
+    /
+...............................
+
+declare
+    v_dept_name departments.department_name%type := 'Education';
+    v_dept_id number;
+    v_max_deptno number;
+    begin
+    select max(department_id) into  v_max_deptno
+   from departments;
+   insert into departments (department_name,department_id)
+       values('Education',(select max(department_id)+1 from departments));
+   dbms_output.put_line( 'row count is : ' ||SQL%ROWCOUNT);
+   dbms_output.put_line( 'DEPARTMENT_ID IS : '|| v_dept_id);
+   END;
+    /
+
+
+
+
+
+declare
+    v_dept_name departments.department_name%type := 'Education';
+    v_dept_id number;
+    begin
+    select max(department_id) into v_dept_id
+   from departments;
+   insert into departments (department_name,department_id)
+       values('Education',v_dept_id+10);
+   dbms_output.put_line( 'row count is : ' ||SQL%ROWCOUNT);
+   dbms_output.put_line( 'DEPARTMENT_ID IS : '|| v_dept_id);
+   END;
+    /
+
+CREATE TABLE MASSAGE 
+(RESULT NUMBER(10);
+  
+
+(((((((((((((((FOR LOOP)))))))))))))))))
+
+BEGIN
+FOR I IN 1..10 LOOP
+IF I = 6 OR I= 8  THEN
+NULL;
+ELSE
+INSERT INTO MASSAGE (RESULT)
+VALUES(I);
+END IF;
+END LOOP;
+END;
+/
+ ((((((((WHILE LOOP)))))))
+
+DECLARE
+    I NUMBER := 11;
+    BEGIN
+   WHILE I<20 LOOP
+    I:=I+1;
+    INSERT INTO MASSAGE (ID,NAME)
+    VALUES(I,'HALIMA');
+    END LOOP;
+    END;
+   /
+
+
+ ***********ASTERRISK*********
+
+CREATE TABLE EMP
+   AS
+    SELECT*
+    FROM EMPLOYEES;
+
+   ALTER TABLE EMP
+   ADD STARS VARCHAR2(50);
+
+DECLARE
+  V_EMPNO EMP.EMPLOYEE_ID%TYPE := 176;
+    V_ASTERISK EMP.STARS%TYPE := NULL;
+    V_SAL EMP.SALARY%TYPE;
+    BEGIN
+    SELECT NVL(ROUND(SALARY/1000),0) INTO V_SAL
+    FROM EMP
+    WHERE EMPLOYEE_ID = V_EMPNO;
+    FOR I IN 1..V_SAL LOOP
+   V_ASTERISK := V_ASTERISK ||'*';
+    END LOOP;
+   UPDATE EMP
+   SET STARS = V_ASTERISK
+   WHERE EMPLOYEE_ID = V_EMPNO;
+   END;
+   /
+
+
+
+
+SET SERVEROUTPUT ON
+ DECLARE
+  V_COUNTRYID VARCHAR2(50) := 'CA';
+    V_COUNTRY_RECORD COUNTRIES%ROWTYPE;
+    BEGIN
+    SELECT * INTO V_COUNTRY_RECORD
+    FROM COUNTRIES
+    WHERE COUNTRY_ID =UPPER (V_COUNTRYID);
+    DBMS_OUTPUT.PUT_LINE('COUNTY_ID : '|| V_COUNTRY_RECORD.COUNTRY_ID||' COUNTRY_NAME IS : '||V_COUNTRY_RECORD.COUNTRY_NAME||' REGIN _ID IS : ' || V_COUNTRY_RECORD.REGION_ID);
+    END;
+
+
+
+
+
+DECLARE
+   CURSOR CUR1 IS
+   SELECT EMPLOYEE_ID, COMMISSION_PCT COMM,12*(SALARY+(SALARY*NVL(COMMISSION_PCT,0))) ANNUL_SAL
+   FROM EMPLOYEES
+    WHERE EMPLOYEE_ID = &EMP_ID;
+    BEGIN
+    FOR I IN CUR1 LOOP
+    DBMS_OUTPUT.PUT_LINE('ANNUAL SALARY IS : ' || I.ANNUL_SAL|| ' '|| I.COMM);
+    END LOOP;
+   END;
+   /
+
+
+DECLARE
+V_SALARY NUMBER;
+V_COMMISSION NUMBER;
+V_EMPID NUMBER :=&EMP;
+BEGIN
+SELECT EMPLOYEE_ID, COMMISSION_PCT, 12*(SALARY+(SALARY*NVL(COMMISSION_PCT,0))) ANNUAL_SALARY
+INTO V_EMPID,V_COMMISSION,V_SALARY
+FROM EMPLOYEES
+WHERE EMPLOYEE_ID =V_EMPID;
+DBMS_OUTPUT.PUT_LINE('ANNUAL SALARY IS : ' ||V_SALARY || ' '||'COMMISSION_PCT IS : '||V_COMMISSION );
+   END;
+/
+  
+
+****** BASIQ LOOP********
+
+DECLARE
+    I NUMBER (10) :=1;
+    BEGIN
+    LOOP
+    DBMS_OUTPUT.PUT_LINE(I);
+    I:=I+1;
+    EXIT WHEN I>10;
+    END LOOP;
+    END;
+   /
+    ******FOR LOOP*******
+
+BEGIN
+      FOR I IN 1..10 LOOP
+        DBMS_OUTPUT.PUT_LINE(I);
+     END LOOP;
+    END;
+    /
+
+  *****WHILE LOOP*******
+
+DECLARE
+  I NUMBER := 1;  
+BEGIN
+  WHILE I <= 10 LOOP
+    DBMS_OUTPUT.PUT_LINE(I);
+    I := I + 1; 
+  END LOOP;
+END;
+/
+
+
+
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+DECLARE
+    CURSOR CUR IS
+    SELECT (SALARY/1000) AS LENG
+    FROM EMPLOYEES;
+   V_DBMS VARCHAR2(100);
+    BEGIN
+    FOR I IN CUR LOOP
+    V_DBMS:= RPAD('*',I.LENG,'*');
+    INSERT INTO EMP (STARS)
+   VALUES(V_DBMS);
+   END LOOP;
+   END;
+  /
+
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+DECLARE
+    V_MAXDEPT NUMBER;
+    BEGIN
+    SELECT MAX(DEPARTMENT_ID) INTO V_MAXDEPT
+    FROM DEPARTMENTS;
+    DBMS_OUTPUT.PUT_LINE('MAX DEPARTEMENT  IS: '||V_MAXDEPT);
+    END;
+    /
+
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+DECLARE
+   V_DEPTID NUMBER :=&DEPID;
+    BEGIN
+    SELECT SUM(SALARY) INTO V_DEPTID
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID = V_DEPTID;
+    DBMS_OUTPUT.PUT_LINE('SUM SALARY IS: '||V_DEPTID);
+    END;
+
+
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+declare 
+v_salary number;
+v_comm number;
+begin 
+select 12 * (salary + (salary * NVL (commission_pct, 0))) AS annual_salary,
+NVL (COMMISSION_PCT, 0)
+into v_salary, v_comm
+from employees
+where employee_id = &empid;
+dbms_output.put_line('annual salary is: '|| v_salary || 'commission_pct : '||v_comm);
+end;
+/
+
+
+
+CREATE TABLE REGION
+(REGIONID NUMBER(10), REGION_NAME VARCHAR2(100));
+
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+BEGIN 
+FOR I IN 1..10 LOOP
+INSERT INTO REGION (REGIONID,REGION_NAME)
+VALUES(I,'REGION'||I);
+END LOOP;
+END;
+/
+
+
+DECLARE
+CURSOR CUR IS 
+SELECT LAST_NAME, SALARY
+FROM EMPLOYEES
+ORDER BY 2 DESC
+FETCH FIRST 5 ROWS ONLY; 
+BEGIN
+FOR I IN CUR LOOP
+DBMS_OUTPUT.PUT_LINE(I.SALARY);
+END LOOP;
+END;
+/
+
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+declare
+    cursor cur is
+    select salary
+    from employees
+    order by salary desc
+    fetch first 3 rows only;
+    begin
+    for i in cur loop
+    insert into max_sal (salary)
+   values(i.salary);
+   end loop;
+   end;
+   /
+
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+
+DECLARE
+  CURSOR salary_cursor IS
+    SELECT DISTINCT salary
+    FROM employees
+    ORDER BY salary DESC;
+    
+  V_MAX NUMBER;
+  V_COUNTER NUMBER := 0;
+BEGIN
+  OPEN salary_cursor;
+  
+  LOOP
+    FETCH salary_cursor INTO V_MAX;
+    EXIT WHEN salary_cursor%NOTFOUND OR V_COUNTER >= 5;
+    
+    DBMS_OUTPUT.PUT_LINE(V_MAX);
+    V_COUNTER := V_COUNTER + 1;
+  END LOOP;
+  
+  CLOSE salary_cursor;
+END;
+/
