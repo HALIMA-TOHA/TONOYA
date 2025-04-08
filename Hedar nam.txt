@@ -1,0 +1,35 @@
+
+
+first step item nibo hedar a likhar jonno then top page code marbo nicher code jei item nibo sei item nam cinay dibo 
+---------------------------------------------------------------------------------------------------------
+
+<#P5_NEW {
+    text-align:center;
+    font-weight:700;
+    padding: 0px;opacity: .95;
+    border: none;
+    pointer-events: none;
+    font-family: emoji;
+    font-size: larger;
+    letter-spacing: 2px;
+background-image: url(https://www.transparenttextures.com/patterns/skulls.png);
+background-color: #009688;
+color: #ffffff;
+/* margin-left: 25%; */
+/* margin-right: 25%; */
+}
+
+
+2nd setp 
+item giye defult => type=>static => j table er nam dibo ta dibo
+-------------------------------------------------------------
+1. <SPAN STYLE="COLOR:BLACK">Active flag</SPAN>
+ Clinic Management System
+
+
+<span style="color:Blue;font-size:18px;text-align: center;"><b> Clinic Management System</b> </span>
+
+span class="fa fa-edit edit-final_id" style="color:green;" aria-hidden="true"><span style="display:none;">#FINAL_ID#</span></span>
+
+
+

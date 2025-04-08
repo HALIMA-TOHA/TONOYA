@@ -1,0 +1,218 @@
+______________sequence________make 
+
+select service_seq.nextval from dual ------check kora EI NAME SEQ  ACHE KI NA 
+select max(doc_service_id) from doc_services-----max joto ache dekha then okhan theke sequence generate kora 
+create sequence SERVICE_SEQ
+START WITH 60001
+----------------------------------------------------------------------------------case diye name change kora-----------------------------------3vabe kora jay 
+
+
+       CASE WHEN SEX = 'M' THEN 'FEMALE'
+       WHEN SEX = 'F' THEN 'MALE'
+       WHEN SEX = 'O' THEN 'OTHERS'
+       ELSE 
+       NULL END AS 
+       SEX,
+-----------------------------------------------------------
+       
+       CASE WHEN QU1 = 2 THEN 'Immediate family member with thalassemia'
+       WHEN QU1 = 1 THEN 'Distant relative with blood disorders'
+       WHEN QU1 = 0 THEN 'No known family history'
+       ELSE
+       NULL END AS 
+       QU1,
+=====================================================================
+       CASE WHEN QU2 = 2 THEN 'First-cousin marriage '
+       WHEN QU2 = 1 THEN 'Second-cousin marriage'
+       WHEN QU2 = 0 THEN 'Non-related parents'
+       ELSE 
+       NULL END AS 
+       QU2,
+=============================================================================
+
+colorfull kora status ba column
+=================================================================
+
+
+
+CASE 
+    WHEN MARITAL_STATUS = 'y' THEN
+        '<span class="subscribe" aria-hidden="true" style="font-size:12px;letter-spacing:.3px;display:inline-block;padding:.4rem .666667rem;font-weight:500;line-height:1;border:2px solid #fffde7;box-shadow:0 5px 10px -3px rgb(0 0 0 / 23%), 0 6px 10px -5px rgb(0 0 0 / 25%);text-align:center;white-space:nowrap;vertical-align:baseline;padding-right:.6em;padding-left:.6em;border-radius:10rem;background-image:linear-gradient(310deg,#17ad37,#98ec2d);color:#024d05;font-weight:bold">Married</span>'
+    ELSE
+        '<span class="subscribe" aria-hidden="true" style="font-size:12px;letter-spacing:.3px;display:inline-block;padding:.4rem .666667rem;font-weight:500;line-height:1;border:2px solid #fffde7;box-shadow:0 5px 10px -3px rgb(0 0 0 / 23%), 0 6px 10px -5px rgb(0 0 0 / 25%);text-align:center;white-space:nowrap;vertical-align:baseline;padding-right:.6em;padding-left:.6em;border-radius:10rem;background-image:linear-gradient(310deg,#2193b0,#6dd5ed);color:#024d70;font-weight:bold">Un Married</span>'
+END AS MARITAL_STATUS1,
+
+
+***************************header****************************************						
+						
+top page er under a inline a giye						
+----------------------------------------------------						
+#P47_HEDING{						
+    text-align:center;						
+    font-weight:700;						
+    padding: 0px;opacity: .95;						
+    border: none;						
+    pointer-events: none;						
+    font-family: emoji;						
+    font-size: larger;						
+    letter-spacing: 2px;						
+background-image: url(https://www.transparenttextures.com/patterns/skulls.png);						
+background-color: #009688;						
+color: #ffffff;						
+/* margin-left: 25%; */						
+/* margin-right:Â 25%; */						
+}						
+---------------------------------------------						
+Item nibo then =>>>deful a giye type =>static =>j table er nam dibo ta likhe dibo )))						
+--------------------------------------------------------------------------------------------------						
+						
+						
+						
+						
+						
+						
+*****************Apex code start**************						
+						
+***JAVASCRIPT SAVE ALERT CODE***						
+						
+Swal.fire({						
+                            position: "top-end"						
+                            icon: "success"						
+                            title: "Transfer request successfully saved"						
+                            showConfirmButton: false						
+                            timer: 2000						
+           Â Â Â Â Â Â Â Â Â Â Â Â Â });						
+						
+						
+(((save alert code java and css marbo ))						
+https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css						
+						
+https://cdn.jsdelivr.net/npm/sweetalert2@11.4.0/dist/sweetalert2.all.min.js						
+						
+						
+						
+**edit code**						
+						
+javascript:$s('P22_EDIT'	'#job_ID#');					
+javascript:$s('P23_JOB_TITLE'	'#JOB_TITLE#');					
+javascript:$s('P23_MIN_SALARY'	'#MIN_SALARY#');					
+javascript:$s('P43_NURSE_ST_ID'	'#NURSE_ST_ID#					
+						
+						
+** DELETE COLOUM CODE JETA NULL SETAY BOSBE **						
+						
+javascript:$s('P27_DEL'	'#P27_DEPARTMENT_ID#');					
+						
+						
+****FORM SIZE SMALL BIG CODE****						
+  FROM LABALE  REGION GIYE =>APPAIRENCE GIYE CSSS CLASS MARTE HOBE !!						
+-------------------------------------------------------------------------						
+js-dialog-size1000x500						
+						
+						
+						
+insert into LOCATIONS(STREET_ADDRESS	POSTAL_CODE	CITY	STATE_PROVINCE	COUNTRY_ID)		
+values((select nvl(max(LOCATION_ID)	1)+1					
+from LOCATIONS)		:P4_MANAGER_ID);				
+						
+ OR 						
+						
+INSERT INTO PARENTS (PA_ID	 NAME	 SHORT_NAME	 STATUS	 INSERT_BY	 INSERT_DATE	 UPDATE_BY
+VALUES (						
+  (SELECT NVL(MAX(PA_ID)	 999) + 1 FROM PARENTS)					
+  :P28_NAME						
+  :P28_SHORT_NAME						
+  :P28_STATUS						
+  :P28_INSERT_BY						
+  :P28_INSERT_DATE						
+  :P28_UPDATE_BY						
+  :P28_UPDATE_DATE						
+);						
+						
+						
+SELECT NVL(MAX(JOB_ID)	99999)+1 INTO :P23_JOB_ID					
+FROM JOBS;						
+						
+insert into JOBS(JOB_ID	JOB_TITLE	MIN_SALARY	MAX_SALARY)			
+values(:P23_JOB_ID	:P23_JOB_TITLE	:P23_MIN_SALARY	:P23_MAX_SALARY);			
+						
+						
+						
+						
+Delete from Locations						
+ Where  location_ID = :p15_del;						
+						
+						
+javascript:$s('P5_EDIT'	'#ADV_ID#');					
+javascript:$s('P30_DEL'	'#JOB_ID#');					
+						
+						
+***diffrent insert code***						
+						
+						
+((FORM LABLE ER GNK ID CODE))						
+						
+						
+select region_name into :P7_REGION_NAME						
+from regions						
+where region_id=:P7_REGION_ID;						
+						
+((form label save er execute sarver code)))						
+						
+BEGIN						
+    IF :P23_EDIT IS NULL THEN						
+        INSERT INTO JOBS (JOB_ID	 JOB_TITLE	 MIN_SALARY	 MAX_SALARY)			
+        VALUES (:P23_JOB_ID	 :P23_JOB_TITLE	 :P23_MIN_SALARY	 :P23_MAX_SALARY);			
+    ELSE						
+        UPDATE JOBS						
+        SET JOB_TITLE = :P23_JOB_TITLE						
+            MIN_SALARY = :P23_MIN_SALARY						
+            MAX_SALARY = :P23_MAX_SALARY						
+        WHERE JOB_ID = :P23_EDIT;						
+    END IF;						
+END;						
+
+
+
+
+*************AUTO AGE PORE JABE DATE DILE *************
+
+DOV TE GIYE DYNAMIC ACTION JAVASCRIPT THEN---------------------
+
+
+// Function to calculate age in years, months, and days
+function calculateAge(dob) {
+    let birthDate = new Date(dob);
+    let today = new Date();
+   
+    let years = today.getFullYear() - birthDate.getFullYear();
+    let months = today.getMonth() - birthDate.getMonth();
+    let days = today.getDate() - birthDate.getDate();
+   
+    // Adjust months and years if necessary
+    if (days < 0) {
+        months--; // Borrow a month
+        let previousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        days += previousMonth.getDate();
+    }
+
+    if (months < 0) {
+        years--; // Borrow a year
+        months += 12;
+    }
+
+    return `${years} Years, ${months} Months, ${days} Days`;
+}
+
+// Get the DOB value from APEX Item
+let dobValue = $v("P47_PDOB"); // Change "P1_DOB" to your actual item name
+
+if (dobValue) {
+    let ageText = calculateAge(dobValue);
+
+    // Set the calculated age text into the APEX page item
+    $s("P47_AGE", ageText); // Change "P1_AGE" to your actual item name
+}
+
+
+--------------------------------------------Afeected element giye 2 tai item cinay dibo age and dob------------------

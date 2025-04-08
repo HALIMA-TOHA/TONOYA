@@ -1,0 +1,166 @@
+
+1st step by check box ----classic report query te dibo then =>> akta item banabo then item to submit jei item banabo  ota cinay dibo   
+-------------------------------------------------------------------------------------------------------------------------------
+
+      APEX_ITEM.CHECKBOX2 (P_IDX         => 10,
+                                      P_VALUE        => EMP_NO,
+                                      P_ATTRIBUTES   => 'class="emp_check" onchange ="GetValues();"',
+                                      P_CHECKED_VALUES => :P25_COUNT) AS CKBOX
+----------------------------------------------------------------------------------------jei column ta hobe report coder maddome setar labale er giye ei code marbo----------------
+<input TITLE= "Click to All Check" flow="left" type="checkbox" id  ="CheckAll" onchange ="GetValues();">
+------------------------------------------------------------------------------------------------------global a code marbo top pager then jei item ami banaicchi seta cinay dibo************
+function GetValues() {
+    ckbox = document.getElementsByName("f10");
+    count = 0;
+    for (var i = 0; i < ckbox.length; i++) {
+        element = ckbox[i];
+        if (element.checked) {
+            count++;
+        }
+    }
+    if (count == 0) {
+        //document.getElementById("P51_COUNT").value = 0;
+        $s('P25_COUNT','0');
+        //document.getElementById("btn_selectedVal").innerHTML = "<b>" + 0 + "</b>";
+    } else {
+        //document.getElementById("P51_COUNT").value = count;
+         $s('P25_COUNT',count);
+        //document.getElementById("btn_selectedVal").innerHTML = "<b>" + "You Selected: " + count + " List" + "</b>";
+    }
+}
+------------------------------------------------AXAX PROSESSING A MARBO CODE 
+-------------------
+DECLARE
+   V_EMPBONUS_ID NUMBER;
+BEGIN
+   IF APEX_APPLICATION.G_F10.COUNT <> 0 THEN
+      FOR I IN 1 .. APEX_APPLICATION.G_F10.COUNT LOOP
+         FOR J IN (SELECT APP_ID,APP_SERIAL_NO
+                     FROM NURSE_STAION
+                    WHERE APP_ID = APEX_APPLICATION.G_F10(I)) LOOP
+            
+            -- SELECT NVL(MAX(EMPBONUS_ID), 1) + 1 INTO V_EMPBONUS_ID FROM HP_EMPBONUS;
+ INSERT INTO DAMMI( ABCD )
+VALUES(APEX_APPLICATION.G_F10(I));
+
+              INSERT INTO  NURSE_STATION(NURSE_ST_ID,APP_ID,INSERT_DATE,INSERT_BY)
+      VALUES(nurse_station_seq_ajax.nextval,APEX_APPLICATION.G_F10(I),SYSDATE,'ABCD');
+
+            --   VALUES(NURSE_STATION_SEQ.NEXTVAL,APEX_APPLICATION.G_F10(I),SYSDATE,'ABCD');
+
+            END LOOP;
+      END LOOP;
+   END IF;
+END;
+
+
+-----------------------------------------------UPDATE KHETRE AJAX---------------------
+BEGIN
+   IF APEX_APPLICATION.G_F10.COUNT <> 0 THEN
+      FOR I IN 1 .. APEX_APPLICATION.G_F10.COUNT LOOP
+         UPDATE NURSE_STATION
+         SET CONSULT_FLAG = 'Y'
+         WHERE NURSE_ST_ID = APEX_APPLICATION.G_F10(I);
+      END LOOP;
+   END IF;
+END;
+
+
+
+
+
+
+
+---------------------------------------------------------------MAIN CLASSIC REPORT ER SQL QUERYR CHAK BOX ER CLASS ACHE AKTA SETA (((.emp_check))  
+SETA K COPPY KORE  DYNAMIC ACTION MARBO  click a  JABASCRIPT action marbo THEN OTAY CLASS TA CHINAY DIBO like eitate____-$(".emp_check:checked")_______  THEN NEW J DEFUALT HOBE SETAY =>>>when hobe=>>>click =>>> GIYE SECTION TYPE J query selector and jQuery Selector ((.emp_chek))diye dibo------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ Swal.fire({
+        title: "Confirmation Alert !",
+        text: "Are you sure to change this active flag?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "YES, I do",
+        cancelButtonText: "NO",
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+
+var f10_array = [];
+// var f11_array = [];
+
+$(".emp_check:checked").each(function () {
+    f10_array.push($(this).val());
+    // f11_array.push($(this).closest("tr").find('Input[name="f11"]').val());
+    // f05_array.push($(this).closest("tr").find('Input[name="f05"]').val());
+});
+
+
+ apex.server.process(
+                "Ajaxfamillytree",
+                { 
+                f10: f10_array //f11: f11_array, pageItems: "#P41_EMP_NO"
+
+                 },
+                {
+                    dataType: "text",
+                    success: function (data) {
+                        apex.region("emp_dtl").refresh();
+                            const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            },
+                        });
+                        Toast.fire({
+                            icon: "success",
+                            title: "Successfully Saved!",
+                        });
+                    },
+                }
+            );
+         } 
+else {
+            // Your code for handling if the user clicks "NO"
+        }
+    });
+
+
+---------------------------------------------------------axas er nam ta DYNAMIC ACTION MARBO JABASCRIPT code a cinay dibo like ei ta te ---------- *****apex.server.process(
+                "Insert _in_nurse_station", ******
+
+
+
+---------------------------------------------------------------------------------------then rejoin dore tar static id diye dibo-------------------------
+
+like nicher id ta 
+
+emp_dtl
+
+-----------------------------------------------------------------------------------------------top page a css file and javascrip file conay dibo---confirmation alert er jonno
+
+
+https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css
+--------------------------------------------------------------------------
+
+https://cdn.jsdelivr.net/npm/sweetalert2@11.4.0/dist/sweetalert2.all.min.js
+
+
+
+
+
+
+
+
+
+
+
+
+

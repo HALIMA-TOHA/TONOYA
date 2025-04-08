@@ -1,0 +1,51 @@
+TREE
+--------------------------------------
+SELECT 
+    CASE
+        WHEN CONNECT_BY_ISLEAF = 1 THEN 0
+        WHEN LEVEL = 1 THEN 1
+        ELSE -1
+    END AS STATUS,   
+
+    LEVEL,
+    (TREVALNAME ||'(' ||(SELECT COUNT(*) FROM HR_DEPT WHERE  PARENT_DEPT = TREVAL_CID))||')'  AS TITLE,
+    TREVAL_CID AS VALUE,
+    NULL AS TOOLTIP,
+    CASE
+        WHEN TREVAL_CID IS NOT NULL THEN 'javascript:pageItem2(' || TREVAL_CID || ')'
+    END AS LINK
+FROM 
+    (
+        SELECT 
+            A.DEPT_NO AS TREVAL_CID,
+            A.PARENT_DEPT AS TREVAL_PID,
+            A.DEPT_NAME AS 
+
+        FROM 
+            HR_DEPT A
+    )
+START WITH 
+    TREVAL_PID IS NULL
+CONNECT BY 
+    PRIOR TREVAL_CID = TREVAL_PID
+ORDER SIBLINGS BY 
+    TREVALNAME;
+
+
+
+ATTRIBUTE
+----------------------------------------
+NODE LABEL = TITLE
+NODE VALUE = VALUE
+NODE STATUS = STATUS
+HIERARCHY LEVEL = LEVEL
+LINK COLUMN = LINK
+SELECTED NODE PAGE ITEM = P32_LINK
+
+
+
+
+GLOBAL FUNCTION & VARIABLE 
+-----------------------------------------------
+function pageItem2(DEPT_NO){
+    $s('P32_LINK', DEPT_NO)}

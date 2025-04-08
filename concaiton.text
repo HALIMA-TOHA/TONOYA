@@ -1,0 +1,67 @@
+concatanation kore data ak field dekhano  
+
+
+
+SELECT NVL2(DETAILS,DOC_NAME||' -'||DETAILS,DOC_NAME)D, DOC_ID R
+FROM DEOCTORS_INFO
+WHERE DEPT_ID = 
+INTO :P47_APP_MOBILE_NO
+FROM PATIENTS_REG_INFO
+WHERE P_REG_ID = :P47_P_REG_ID;
+
+<STYLE="color: blue; font-weight: bold;">Doctor Available Day</style>
+
+
+javascript:$s('P43_EDIT','#DOC_ID#'); 
+javascript:$s('P43_APP_ID','#APP_ID#');
+javascript:$s('P43_DOC_ID','#DOC_ID#');
+javascript:$s('P43_NURSE_ST_ID','#NURSE_ST_ID#');
+
+
+javascript:$s('P43_UPDATED_BILLING','#BILL_ID#');
+javascript:$s('P43_DOC_ID2','#DOC_ID#'); 
+ javascript:$s('P43_APP_ID','#APP_ID#'); 
+javascript:$s('P43_DOC_ID','#DOC_ID#'); 
+
+
+
+
+javascript:$s('P43_EDIT','#DOC_ID#');   javascript:$s('P43_APP_ID','#ID#');  javascript:$s('P43_DOC_ID','#DOC_ID#');  javascript:$s('P43_NURSE_ST_ID','#NURSE_ST_ID#'); javascript:$s('P43_PATIENT_TYPE','#PATIENT_TYPE#');javascript:$s('P43_DOC_NAME','#DOC_NAME#'); javascript:$s('P43_PAT_NAME','#P_NAME#');
+
+
+
+
+
+
+
+
+
+
+:P43_BILL_DATE2,  :P43_DOC_ID2,  =:P43_DISCOUNT_PCT2,  :P43_NET_AMOUNT2, :P43_APP_ID2,  :P43_NURSE_ST_ID2,   :P43_STATUS2,  :P43_TOTAL2,   :P43_DISCOUNT_AMOUNT2,     :P43_RECEIVE_AMOUNT2,     :P43_RETURN_OR_DUE_AMT2   :P43_UPDATED_BILLING;
+
+
+
+
+
+
+ select   DS.shift_name||' ('|| DS.START_TIME||'-'|| DS.END_TIME||')' D
+INTO :P47_SHIFT_NAME
+  from doctors_info D, DR_NEW_SHIFT_INFO DS
+	WHERE(D.DR_SH_ID = DS.DR_SH_ID)
+	AND DOC_ID =:P47_DOC_ID;
+
+SELECT RATE
+FROM DOC_SERVICES
+WHERE DOC_ID = P43_DOC_ID
+
+AND PATIENT = 
+
+
+SELECT PUR_DTL_NO
+FROM PURCHASE_DTL
+WHERE PURCHASE_NO = :P13_PURCHASE_NO
+AND PROD_NO = :P13_PROD_NO;
+
+SELECT PATIENT_TYPE
+FROM APPOINTMENT_INFO
+WHERE DOC_ID = P43_DOC_ID

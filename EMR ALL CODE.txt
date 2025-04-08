@@ -1,0 +1,54 @@
+select c.consultation_id,'C'||c.consultation_id, c.doc_id,c.follow_UP_DAYS,v.visit_date,'PR'||v.p_reg_id, v.p_name,
+CASE 
+        WHEN v.Gender = 'F' THEN 'FEMALE'
+        WHEN v.Gender = 'M' THEN 'MALE'
+        ELSE v.Gender
+    END AS Gender, v.age,v.blood_group,
+v.bp, v.rr,v.h_rate,v.temp,v.Height,v.Weight, v.chief_complains
+from consultation c join pre_consult_info v
+on(c.app_id = v.app_id)
+where c.consultation_id=:p_consult_no;
+----------------------------------------------------
+
+select d.doc_id, d.doc_name,dp.dept_name
+from doctors_info d join departments_info dp
+on(d.dept_id=dp.dept_id)
+where d.doc_id= :doc_id;
+
+select clinic_name, get_cl_full_address(clinic_id)||', Hotline: '||PHONE_NO||', E-mail: '||email||', Web: '||website details
+from clinic_info;
+
+
+SELECT drd.doc_id,LISTAGG(dd.dd_name||'('||drd.note||')',', ') within group  (ORDER  BY DD_NAME DESC) DEGREE 
+FROM DOCTORS_DTL_INFO DRD
+join dr_degrees_info dd
+on(drd.dd_id=dd.dd_id)
+group by drd.doc_id
+having drd.doc_id= :doc_id;
+
+
+SELECT DOC_ID, listagg(experience,', ') WITHIN GROUP (ORDER BY experience) EXPERIENCE
+FROM doc_exp_dtl
+group by doc_id
+having doc_id=:doc_id;
+
+select '. '|| a.adv_name
+from ADVICE_INFO a join CONS_ADVICE_DETAILS ca
+on(ca.adv_id = a.adv_id)
+where ca.CONSULTATION_ID=:consultation_id;
+
+
+
+
+
+select '. '|| i.inv_name
+from INVESTIGATION_INFO i join CONSULT_INV_DETAILS ci
+on(i.inv_id = ci.inv_id)
+where ci.CONSULTATION_ID=:consultation_id;
+
+
+select d.SL_NO||'. '|| m.med_name,d.frequency||' - '|| d.intake_days||' days'
+from CONSULT_MEDICINE_DETAILS d
+join medicine_info m
+on(m.med_id= d.med_id)
+where d.CONSULTATION_ID=:consultation_id;

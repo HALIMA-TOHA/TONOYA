@@ -1,0 +1,311 @@
+1. GLOBAL VARIABLE
+2. INLINE A CODE
+3. SAVE BUTTON A DYNAMIC ACTION A CLIENT SIDE CONDITION A DEKHATE HOBE
+4. JEI SOKOL ITEM NULL SEI ITEM A GIYE NULL REMOVER CODE DITE HOBE
+
+
+
+
+GLOBAL VARIABLE  top pager mode dibo
+------------------------------------------
+var Alert = undefined;
+(function(Alert) {
+  var alert, success;
+  success = function(message, title, options) {
+    return alert("success", message, title, "fa fa-ban", options);
+  };
+  alert = function(type, message, title, icon, options) {
+    var alertElem, messageElem, titleElem, iconElem, innerElem, _container;
+    if (typeof options === "undefined") {
+      options = {};
+    }
+    options = $.extend({}, Alert.defaults, options);
+    if (!_container) {
+      _container = $("#alerts");
+      if (_container.length === 0) {
+        _container = $("<ul>").attr("id", "alerts").appendTo($("body"));
+      }
+    }
+    if (options.width) {
+      _container.css({
+        width: options.width
+      });
+    }
+      alertElem = $("<li>").addClass("alert").addClass("alert-" + type);
+      setTimeout(function() {
+         alertElem.addClass('open');
+      }, 1);
+    if (icon) {
+      iconElem = $("<i>").addClass(icon);
+      alertElem.append(iconElem);
+    }
+    innerElem = $("<div>").addClass("alert-block");
+    alertElem.append(innerElem);
+    if (title) {
+      titleElem = $("<div>").addClass("alert-title").append(title);
+      innerElem.append(titleElem);
+    }
+    if (message) {
+      messageElem = $("<div>").addClass("alert-message").append(message);
+      innerElem.append(messageElem);
+    }
+    if (options.displayDuration > 0) {
+      setTimeout((function() {
+        leave();
+      }), options.displayDuration);
+    } else {
+      innerElem.append("<em>Click to Dismiss</em>");
+    }
+    alertElem.on("click", function() {
+      leave();
+    });
+     function leave() {
+         alertElem.removeClass('open');
+          alertElem.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',  function() { return alertElem.remove(); });
+    }
+    return _container.prepend(alertElem);
+  };
+  Alert.defaults = {
+    width: "",
+    icon: "",
+    displayDuration: 3000,
+    pos: ""
+  };
+
+  Alert.success = success;
+  return _container = void 0;
+    
+})(Alert || (Alert = {}));
+
+
+
+CLIENT SIDE CONDITION      save button er opre new tar mode cline side condition a gie java express code dibo and jei item lal mark dekhate cacchi ta chinay dibo itemer modde
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ 
+((apex.item('P302_USER_DEFINE_EMP_NO').getValue() != '') &&
+ (apex.item('P302_SHIFT_DATE').getValue() != '') &&
+ (apex.item('P302_SHIFT_TIME').getValue() != '') &&
+  ((apex.item('P302_LOGIN_TIME').getValue() != '') ||
+ (apex.item('P302_LOGOUT_TIME').getValue() != '')))
+
+
+
+INLINE CSS
+------------------
+/----------------alertS-------------------/
+.nodatafound {
+    display: block;
+    padding: 12px;
+    font-size: 11px;
+    text-align: center;
+}
+
+#alerts1 {
+  width: 400px;
+  top: 40px;
+  right:50px;
+  position: fixed;
+  z-index: 9999;
+  list-style:none;
+}
+#alerts {
+  width: 400px;
+  top: 40px;
+  right: 20px; 
+  position: fixed;
+  z-index: 9999;
+  list-style:none;
+}
+.alert {
+  width: 100%;
+  margin-bottom: 8px;
+  display:block;
+  position:relative;
+  border-left:4px solid;
+  right:-50px;
+  opacity:0;
+  line-height:1;
+  padding: 0;
+  transition: right 400ms, opacity 400ms, line-height 300ms 100ms, padding 300ms 100ms; 
+  display: table;
+}
+
+.open {
+    right:0;
+    opacity:1;
+    line-height: 2;
+    padding: 10px 15px;
+    transition: line-height 200ms, padding 200ms, right 350ms 200ms, opacity 350ms 200ms;
+}
+
+.alert-title {
+  font-weight: bold;
+}
+
+.alert i {
+  font-size: 2em;
+  width: 1.5em;
+  max-height: 48px;
+  top: 0%;
+  margin-top: -12px;
+  display: table-cell;
+  vertical-align: middle;
+  }  
+
+.alert-success {
+  color: #000;
+  border-color: #ff9999;
+  background-color: #ff9999;
+}
+/* .fa-check{
+    color: #1aff1a;
+} */
+.fa-ban{
+color:red;
+}
+
+-------------------------------------------
+NULL REMOVER code jei item a dibo setay dynamic action dibo execute java script code setting a giye code dibo 
+--------------------------------------------------------------------------------------------------------------------------
+$("#P4_LEVEL_DIU").css({ "border": "1.5px  solid #c7c6c6","height": "28px","border-radius":"3px"});
+
+
+NULL CODE save er under arekta action false hobe execute java script  setay hobe 
+-----------------------------------------------------------------------------------------
+var val = apex.item("P47_APP_DATE_TIME").getValue();
+
+if (val === "") {
+  $("#P47_APP_DATE_TIME").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+
+
+
+or multiple er jonnno nicher ta 
+-------------------------------------------
+
+
+
+
+
+var val = apex.item("P43_BILL_DATE").getValue();
+
+if (val === "") {
+  $("#P43_BILL_DATE").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+
+var val = apex.item("P43_RECEIVE_AMOUNT").getValue();
+
+if (val === "") {
+  $("#P43_RECEIVE_AMOUNT").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+
+var val = apex.item("P43_STATUS").getValue();
+
+if (val === "") {
+  $("#P43_STATUS").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+optional demu
+-------------------------------------------------------------------------------------------
+var val = apex.item("select2-P239_EMPLOYEE_TYPE-container").getValue();
+var val1 = apex.item("P239_EFFECTIVE_FROM").getValue();
+var val2 = apex.item("P239_HEAD_NAME").getValue();
+var val3 = apex.item("select2-P239_BASED_ON-container").getValue();
+var val4 = apex.item("P239_DURATION_FOR_PF").getValue();
+var val5 = apex.item("P239_PCT").getValue();
+var val6 = apex.item("P239_LUMP_SUM_PF").getValue();
+var val7 = apex.item("P239_JOB_DURATION").getValue();
+var val8 = apex.item("P239_CONTRIBUTON_LUMP_SUM_AMOUNT").getValue();
+var val9 = apex.item("P239_CONTRIBUTION_PCT").getValue();
+
+if (
+  val === "" &&
+  val1 === "" &&
+  val2 === "" &&
+  val3 === "" &&
+  val4 === "" &&
+  (val5 === "" || val6 === "") &&
+  val7 === "" &&
+  (val8 === "" || val9 === "")
+) {
+  $(
+    "#select2-P239_EMPLOYEE_TYPE-container, #P239_EFFECTIVE_FROM, #P239_HEAD_NAME, #select2-P239_BASED_ON-container, #P239_DURATION_FOR_PF, #P239_PCT, #P239_LUMP_SUM_PF, #P239_JOB_DURATION, #P239_PCT_FIXED_FLAG, #P239_CONTRIBUTON_LUMP_SUM_AMOUNT, #P239_CONTRIBUTION_PCT"
+  ).css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+if (val === "") {
+  $("#select2-P239_HEAD_NAME-container").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+if (val1 === "") {
+  $("#P239_EFFECTIVE_FROM").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+if (val2 === "") {
+  $("#P239_HEAD_NAME").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+if (val3 === "") {
+  $("#select2-P239_BASED_ON-container").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+if (val4 === "") {
+  $("#P239_DURATION_FOR_PF").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+if (val5 === "" || val6 === "") {
+  $("#P239_PCT, #P239_LUMP_SUM_PF").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+if (val7 === "") {
+  $("#P239_JOB_DURATION").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+if (val8 === "" || val9 === "") {
+  $("#P239_CONTRIBUTON_LUMP_SUM_AMOUNT, #P239_CONTRIBUTION_PCT").css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+if (
+  val === "" ||
+  val1 === "" ||
+  val2 === "" ||
+  val3 === "" ||
+  val4 === "" ||
+  val5 === "" ||
+  val6 === "" ||
+  val7 === "" ||
+  val8 === "" ||
+  val9 === ""
+) {
+  $(
+    "#select2-P239_EMPLOYEE_TYPE-container, #P239_EFFECTIVE_FROM, #P239_HEAD_NAME, #select2-P239_BASED_ON-container, #P239_DURATION_FOR_PF, #P239_PCT, #P239_LUMP_SUM_PF, #P239_JOB_DURATION, #P239_PCT_FIXED_FLAG, #P239_CONTRIBUTON_LUMP_SUM_AMOUNT, #P239_CONTRIBUTION_PCT"
+  ).css({ "border": "2.5px  solid red","height": "30px","border-radius":"3px"}); 
+  Alert.success("Please Input Radmark field.", { displayDuration: 3000, pos: "top" });
+}
+
+
+
+
+
+

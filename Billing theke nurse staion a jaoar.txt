@@ -1,0 +1,74 @@
+Billing theke nurse staion a jaoar code 
+------------------------------------------------------------
+
+DECLARE 
+	V_NURSE_ST_ID NUMBER;
+
+BEGIN
+	SELECT NVL((MAX(NURSE_ST_ID)),0)+1 INTO V_NURSE_ST_ID FROM NURSE_STATION;
+
+	 INSERT INTO NURSE_STATION (NURSE_ST_ID, VISIT_DATE, IN_FLAG, APP_ID)
+   VALUES (V_NURSE_ST_ID, SYSDATE, 1, :P48_APPID
+);
+end;
+
+-----------------------------
+
+
+sir validation code doc available day 
+----------------------------------------------
+
+DECLARE 
+ V_PICKED_DAY VARCHAR2(5) := TO_CHAR(TO_DATE(:P31_APP_DATE,'MM/DD/YYYY'),'DY');
+ V_DOC_ID NUMBER := :P31_DOCTOR_NO;
+ V_COUNTER NUMBER := 0;
+ CURSOR DOC_AV_DAYS(P_DOC_ID IN NUMBER) IS 
+                        SELECT 'SAT' ADAY
+                        FROM DOCS_AV_DAY
+                        WHERE DOC_ID = P_DOC_ID
+                        AND SAT = 1
+                        UNION
+                        SELECT 'SUN' ADAY
+                        FROM DOCS_AV_DAY
+                        WHERE DOC_ID = P_DOC_ID
+                        AND SUN = 1
+                        UNION
+                        SELECT 'MON' ADAY
+                        FROM DOCS_AV_DAY
+                        WHERE DOC_ID = P_DOC_ID
+                        AND MON = 1
+                        UNION
+                        SELECT 'TUE' ADAY
+                        FROM DOCS_AV_DAY
+                        WHERE DOC_ID = P_DOC_ID
+                        AND TUE = 1
+                        UNION
+                        SELECT 'WED' ADAY
+                        FROM DOCS_AV_DAY
+                        WHERE DOC_ID = P_DOC_ID
+                        AND WED = 1
+                        UNION
+                        SELECT 'THU' ADAY
+                        FROM DOCS_AV_DAY
+                        WHERE DOC_ID = P_DOC_ID
+                        AND THU = 1
+                        UNION
+                        SELECT 'FRI' ADAY
+                        FROM DOCS_AV_DAY
+                        WHERE DOC_ID = P_DOC_ID
+                        AND FRI = 1;
+BEGIN
+
+
+ FOR i IN DOC_AV_DAYS(  P_DOC_ID=>V_DOC_ID) LOOP
+  IF V_PICKED_DAY = i.ADAY THEN
+     V_COUNTER := 1; 
+   END IF;
+ END LOOP;
+
+
+IF V_COUNTER = 0 THEN
+   RETURN 'Doctor Not Available on Selected Day!';
+END IF;
+
+END;

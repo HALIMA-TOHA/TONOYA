@@ -1,0 +1,115 @@
+REGION CODE SQL  A MARBO 
+-----------------------------------
+
+CASE
+    WHEN ACTIVE_FLAG = 'N' THEN
+        '<a href="javascript:pageItem2(' ||          
+            APEX_ESCAPE.JS_LITERAL(DEPT_NO) || ')">' ||
+        '<span class="subscribe" aria-hidden="true" style="font-size:12px;letter-spacing: .3px;display: inline-block;padding: .4rem .66666667rem;font-size: 89%;font-weight: 500;line-height: 1;border: 2px solid #fffde7;box-shadow: 0 5px 10px -3px rgb(0 0 0 / 23%), 0 6px 10px -5px rgb(0 0 0 / 25%);text-align: center;white-space: nowrap;vertical-align: baseline;padding-right:.6em;padding-left:.6em; border-radius: 10rem;background-image: linear-gradient(310deg,#17ad37,#98ec2d);color: #024d05;font-weight:bold">Inactive</span></a>'
+    ELSE
+        '<a href="javascript:pageItem2(' ||          
+            APEX_ESCAPE.JS_LITERAL(DEPT_NO) || ')">' ||
+        '<span class="subscribe" aria-hidden="true" style="font-size:12px;letter-spacing: .3px;display: inline-block;padding: .4rem .66666667rem;font-size: 89%;font-weight: 500;line-height: 1;border: 2px solid #fffde7;box-shadow: 0 5px 10px -3px rgb(0 0 0 / 23%), 0 6px 10px -5px rgb(0 0 0 / 25%);text-align: center;white-space: nowrap;vertical-align: baseline;padding-right:.6em;padding-left:.6em; border-radius: 10rem;background-image: linear-gradient(310deg,#720800,#ff2616);color: #ffffff;font-weight:bold">Active</span></a>'
+END AS ACTIVE_FLAG
+
+
+
+
+
+AGE ITEM NIBO LIKE ** _UPDATE_ACTIVE_STATUS
+------------------------------
+GLOBAL FUNCTION & VARIABLE  TO PAGE A
+---------------------------------
+function pageItem2(SERVICE_ID) { $s('P3_UPDATE_ACTIVE_STATUS',SERVICE_ID);}
+
+
+
+
+PROSSESE A MARBO    AJAX  ACTION UPDATE CODE SOURCH /// PLSQL MARBO
+-------------------------------
+   UPDATE USERS_INFO SET 
+             STATUS =     CASE 
+        WHEN STATUS = 'Y' THEN 'N' 
+        ELSE 'Y'
+    END
+      
+  
+       WHERE UI_ID = :P19_ACTIVEE;
+
+
+------------------------------------
+
+
+
+-----------------------------------------------------------------------------------------------------------
+JEI ITEM LIKE P46_ACTIVE SETAY 
+Execute JavaScript Code MARBO 
+AJAX CALL 
+----------------------------------
+    Swal.fire({
+        title: "Confirmation Alert !",
+        text: "Are you sure to change this active flag?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "YES, I do",
+        cancelButtonText: "NO",
+    }).then((result) => {
+        if (result.isConfirmed) {
+             apex.server.process(
+                "UPDATE_ACTIVE_STATUS",
+                {
+                    pageItems: "#P27_UPDATE_ACTIVE_STATUS"
+                },
+                {
+                    dataType: "text",
+                    success: function (data) {
+                        apex.item("P27_UPDATE_ACTIVE_STATUS").setValue('');
+
+                        apex.region("InvestigGationIds").refresh();
+
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                            });
+
+                            Toast.fire({
+                            type: 'success',
+                            title: 'Successfully Updated!',
+                            
+  
+                        // Swal.fire({
+                        //     position: "top-end",
+                        //     icon: "success",
+                        //     title: "Transfer request successfully Updated",
+                        //     showConfirmButton: false,
+                        //     timer: 1000,
+                        });
+                    },
+                }
+            );
+         } 
+else {
+            // Your code for handling if the user clicks "NO"
+        }
+    });
+
+-------------------------------------------------------------
+REJION A STATIC ID DIBO ADVANCE GIYE LIKE  ABCD 
+
+THEN
+
+ITEN DYNAMIC ACTION  A GIYE  Execute JavaScript Code action marbo then  ////a giye ei jay gay dibo ****apex.region("ABCD")****
+
+
+then AJAX ACTION ER nam ta cinay dite hobe  Execute JavaScript Code er    like ei jaygay ****
+ apex.server.process( "STATUS_UPDATED",
+
+
+
+
+
+ 

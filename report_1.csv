@@ -1,0 +1,158 @@
+***************************header****************************************
+
+top page er under a inline a giye
+----------------------------------------------------
+#P47_HEDING{
+    text-align:center;
+    font-weight:700;
+    padding: 0px;opacity: .95;
+    border: none;
+    pointer-events: none;
+    font-family: emoji;
+    font-size: larger;
+    letter-spacing: 2px;
+background-image: url(https://www.transparenttextures.com/patterns/skulls.png);
+background-color: #009688;
+color: #ffffff;
+/* margin-left: 25%; */
+/* margin-right: 25%; */
+}
+---------------------------------------------
+Item nibo then =>>>deful a giye type =>static =>j table er nam dibo ta likhe dibo )))
+--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+*****************Apex code start**************
+
+***JAVASCRIPT SAVE ALERT CODE***
+
+Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "Transfer request successfully saved",
+                            showConfirmButton: false,
+                            timer: 2000,
+                        });
+
+
+(((save alert code java and css marbo ))
+https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css
+
+https://cdn.jsdelivr.net/npm/sweetalert2@11.4.0/dist/sweetalert2.all.min.js
+
+
+
+**edit code**
+
+javascript:$s('P22_EDIT','#job_ID#');
+javascript:$s('P23_JOB_TITLE','#JOB_TITLE#');
+javascript:$s('P23_MIN_SALARY','#MIN_SALARY#');
+javascript:$s('P43_NURSE_ST_ID','#NURSE_ST_ID#
+
+
+** DELETE COLOUM CODE JETA NULL SETAY BOSBE **
+
+javascript:$s('P27_DEL','#P27_DEPARTMENT_ID#');
+
+
+****FORM SIZE SMALL BIG CODE****
+  FROM LABALE  REGION GIYE =>APPAIRENCE GIYE CSSS CLASS MARTE HOBE !!
+-------------------------------------------------------------------------
+js-dialog-size1000x500
+
+
+
+insert into LOCATIONS(STREET_ADDRESS,POSTAL_CODE,CITY,STATE_PROVINCE,COUNTRY_ID)
+values((select nvl(max(LOCATION_ID),1)+1
+from LOCATIONS),,:P4_MANAGER_ID);
+
+ OR 
+
+INSERT INTO PARENTS (PA_ID, NAME, SHORT_NAME, STATUS, INSERT_BY, INSERT_DATE, UPDATE_BY, UPDATE_DATE)
+VALUES (
+  (SELECT NVL(MAX(PA_ID), 999) + 1 FROM PARENTS),
+  :P28_NAME,
+  :P28_SHORT_NAME,
+  :P28_STATUS,
+  :P28_INSERT_BY,
+  :P28_INSERT_DATE,
+  :P28_UPDATE_BY,
+  :P28_UPDATE_DATE
+);
+
+
+SELECT NVL(MAX(JOB_ID),99999)+1 INTO :P23_JOB_ID
+FROM JOBS;
+
+insert into JOBS(JOB_ID,JOB_TITLE,MIN_SALARY,MAX_SALARY)
+values(:P23_JOB_ID,:P23_JOB_TITLE,:P23_MIN_SALARY,:P23_MAX_SALARY);
+
+
+
+----------------------------------------------------------------------
+Delete from Locations
+ Where  location_ID = :p15_del;
+
+
+javascript:$s('P5_EDIT','#ADV_ID#');
+javascript:$s('P30_DEL','#JOB_ID#');
+--------------------------------------------------------------------update code
+
+
+
+update APPOINTMENT_INFO
+set 
+APP_DATE_TIME=:P47_APP_DATE_TIME,
+APP_SERIAL_NO=:P47_APP_SERIAL_NO,
+P_REG_ID= CASE WHEN :P47_ADD_NEW = 1 THEN P_ID ELSE TO_NUMBER(:P47_P_REG_ID) END,
+DOC_SH_ID=:P47_DOC_SH_ID,
+APP_MOBILE_NO=:P47_APP_MOBILE_NO,
+RESCHEDULE=:P47_RESCHEDULE,
+PATIENT_TYPE=:P47_PATIENT_TYPE,
+SERIAL_NO=:P47_SERIAL_NO,
+NOTE=:P47_NOTE,
+STATUS=:P47_STATUS,
+
+UPDATE_BY=:P47_UPDATE_BY,
+UPDATE_DATE=:P47_UPDATE_DATE
+where APP_ID =:P47_EDIT;
+:P47_ALERT:= 2;
+
+--------------------------------------------------------onno table theke arek table update change
+
+update NURSE_STATION 
+set  STATUS_VITAL_SIGN= 'Completed'
+where NURSE_ST_ID = :P48_NURSE_ID;
+
+
+
+
+
+***diffrent insert code***
+
+
+((FORM LABLE ER GNK ID CODE))
+
+
+select region_name into :P7_REGION_NAME
+from regions
+where region_id=:P7_REGION_ID;
+
+((form label save er execute sarver code)))
+
+BEGIN
+    IF :P23_EDIT IS NULL THEN
+        INSERT INTO JOBS (JOB_ID, JOB_TITLE, MIN_SALARY, MAX_SALARY)
+        VALUES (:P23_JOB_ID, :P23_JOB_TITLE, :P23_MIN_SALARY, :P23_MAX_SALARY);
+    ELSE
+        UPDATE JOBS
+        SET JOB_TITLE = :P23_JOB_TITLE,
+            MIN_SALARY = :P23_MIN_SALARY,
+            MAX_SALARY = :P23_MAX_SALARY
+        WHERE JOB_ID = :P23_EDIT;
+    END IF;
+END;

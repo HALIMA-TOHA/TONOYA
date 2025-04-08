@@ -1,0 +1,68 @@
+
+
+------------------------------------------------------------------Practice-----single table er khetre---------
+
+SELECT 
+    CASE
+        WHEN CONNECT_BY_ISLEAF = 1 THEN 0
+        WHEN LEVEL = 1 THEN 1
+        ELSE -1
+    END AS STATUS,   
+
+    LEVEL,
+    TREVALNAME  AS TITLE,
+    TREVAL_CID AS VALUE,
+    NULL AS TOOLTIP,
+   CASE
+    WHEN TREVAL_CID IS NOT NULL THEN 
+       
+            'javascript:ItemId('
+            || apex_escape.js_literal(TREVAL_CID)
+            || ','
+            || apex_escape.js_literal(NULL)
+            || ')'
+
+END AS LINK
+
+FROM 
+    (
+        SELECT MY_ID  AS TREVAL_CID, NAME  AS TREVALNAME, PARENT_ID  AS TREVAL_PID   
+        FROM MY_FAMILY 
+    ) EMP
+START WITH 
+    TREVAL_PID IS NULL
+CONNECT BY 
+    PRIOR TREVAL_CID = TREVAL_PID
+ORDER SIBLINGS BY 
+    TREVALNAME;
+-------------------------------------------------------------------------
+
+
+ATTRIBUTE
+----------------------------------------
+NODE LABEL = TITLE
+NODE VALUE = VALUE
+NODE STATUS = STATUS
+HIERARCHY LEVEL = LEVEL
+LINK COLUMN = LINK
+SELECTED NODE PAGE ITEM = P32_LINK
+
+---------------------------------------------------------------------
+
+GLOBAL FUNCTION & VARIABLE 
+-----------------------------------------------
+
+function ItemId(TREVAL_CID) { $s('P7_VALUE',TREVAL_CID);}
+
+***************************************************************************************end
+
+
+
+
+2 table er khetre majkhane eita change hobe 
+--------------------------------------------------------
+
+
+SELECT  DEPT_ID  TREVAL_CID, DEPT_NAME TREVALNAME , NULL AS TREVAL_PID FROM DEPARTMENTS_INFO
+UNION ALL 
+SELECT EMP_ID  TREVAL_CID,EMP_NAME TREVALNAME, DEPT_ID TREVAL_PID   FROM EMPLOYEES_INFO

@@ -1,0 +1,371 @@
+QUERY
+------------------------------------------------------------
+APEX_ITEM.TEXT(
+                    p_idx        => 13,
+                    p_value      =>  CASE 
+                                       WHEN :P25_BONUS_PCT IS NOT NULL AND :P25_BASIC_GROSS_FLAG = 'B' THEN TO_CHAR(ROUND(BASIC_AMOUNT * (:P25_BONUS_PCT/100)))
+                                       WHEN :P25_BONUS_PCT IS NOT NULL AND :P25_BASIC_GROSS_FLAG = 'G' THEN TO_CHAR(ROUND(GROSS_AMOUNT * (:P25_BONUS_PCT/100)))
+                                       WHEN :P25_BONUS_AMT IS NOT NULL THEN :P25_BONUS_AMT
+                                     END,                                      
+                    p_attributes =>'class="other_val" style="border:none; text-align: right; width: 70px; pointer-events:none; background:transparent;"') as BONUS_AMOUNT,
+       -----------------------------------------------------------------------------
+       APEX_ITEM.CHECKBOX2 (P_IDX         => 10,
+                                      P_VALUE        => EMP_NO,
+                                      P_ATTRIBUTES   => 'class="emp_check" onchange ="GetValues();"',
+                                      P_CHECKED_VALUES => :P25_COUNT) AS CKBOX
+
+
+
+CHECKBOX HEADING
+----------------------------------------------------------
+<input TITLE= "Click to All Check" flow="left" type="checkbox" id  ="CheckAll" onchange ="GetValues();">
+
+
+
+
+
+GLOBAL FUNCTION & VARIABLE
+----------------------------------------------------------------------
+function GetValues() {
+    ckbox = document.getElementsByName("f10");
+    count = 0;
+    for (var i = 0; i < ckbox.length; i++) {
+        element = ckbox[i];
+        if (element.checked) {
+            count++;
+        }
+    }
+    if (count == 0) {
+        //document.getElementById("P51_COUNT").value = 0;
+        $s('P25_COUNT','0');
+        //document.getElementById("btn_selectedVal").innerHTML = "<b>" + 0 + "</b>";
+    } else {
+        //document.getElementById("P51_COUNT").value = count;
+         $s('P25_COUNT',count);
+        //document.getElementById("btn_selectedVal").innerHTML = "<b>" + "You Selected: " + count + " List" + "</b>";
+    }
+}
+
+
+
+
+
+PAGINATION VALUE PASS TO ITEM
+-------------------------------------------------
+CLASSIC REPORT
+----------------------------------------
+DINAMIC ACTION
+------------------------------------------------
+var str = $("#emp_dtl .a-IRR-pagination-label").text();
+var totalCount = str.charAt(str.length-1);
+var result = str.substring(str.indexOf('of')+2);
+var dashPosition = str.indexOf("-");
+var result = result = result.replace(/\s+/g, '');
+// $s('P25_TOTAL_EMPLOYEES',result);
+
+
+
+
+DINAMIC ACTION
+-------------------------------------------------
+GetValues();
+
+
+
+DINAMIC ACTION
+----------------------------------
+$(".emp_check").click(function () {
+    if ($(this).is(":checked")) {
+        let fixamt = $(this).closest("tr").find(".other_val").val();
+        $(this).closest("tr").find(".tot_val").val(fixamt);
+    } else {
+        // Optionally, you can clear the value if the checkbox is unchecked
+        $(this).closest("tr").find(".tot_val").val("");
+    }
+});
+
+
+
+
+
+
+
+TOTAL EMP & COUNT ITEM VALUE TO REGION NAME CHANGE
+---------------------------------------------
+DINAMIC ACTION
+---------------------------------------------
+var val = $v('P27_TOTAL_EMP');
+var count = $v('P27_COUNT');
+
+//$('#emp_dtl_heading','Selected '+count+' of '+val+' '+' Employees');
+
+$('#emp_dtl_heading').html('Selected ' + count + ' of ' + val + ' Employees');
+
+---------------------------
+var val = $v('P161_TOTAL_EMPLOYEE');
+var count = $v('P161_COUNT');
+
+$s('R369331443512280035_heading', 'Selected '+count+' of '+val+' '+' Employees');
+
+
+
+
+ITEM VALUE PASS TO COLUMN
+---------------------------------------------
+P25_BONUS_AMT
+---------------------------------------------------
+DINAMIC ACTION
+----------------------------------------------------
+$(document).ready(function() {
+    var bonusAmtValue = $v("P25_BONUS_AMT");
+    $(".other_val").val(bonusAmtValue);
+});
+
+
+
+
+CHECK ALL ON REPORT
+----------------------------------------------------------------------
+CLICK 
+----------------------------
+J QUERY 
+-------------------------------------
+#CheckAll
+---------------------------------------------
+if ($('#emp_dtl #CheckAll' ).is(':checked') ) {
+      $(' #emp_dtl input[type=checkbox][name=f10]').prop('checked',true);
+     } else {
+     $('#emp_dtl input[type=checkbox][name=f10]').prop('checked',false);
+ } 
+
+
+
+
+
+let selected = []; // Initialize an empty array to store selected values
+let bonus_type = $('#P25_FIXED_PCT_FLAG').val(); // Assuming P25_FIXED_PCT_FLAG is an input field
+
+if ($('#CheckAll').is(':checked')) {
+    $('#emp_dtl input[type=checkbox][name=f10]').prop('checked', true);
+} else {
+    $('#emp_dtl input[type=checkbox][name=f10]').prop('checked', false);
+}
+
+if ($("#CheckAll").is(":checked")) {
+    $(".emp_check").each(function () {
+        selected.push($(this).val());
+        if ($(this).is(":checked")) {
+            let fixamt = $(this).closest("tr").find(".other_val").val();
+            $(this).closest("tr").find(".tot_val").val(fixamt);
+        }
+    });
+}
+
+
+
+
+
+
+
+
+PROCESS
+----------------------------------------------------
+SAVE
+-------------------------------------------------------
+DECLARE
+   V_EMPBONUS_ID NUMBER;
+BEGIN
+   IF APEX_APPLICATION.G_F10.COUNT <> 0 THEN
+      FOR I IN 1 .. APEX_APPLICATION.G_F10.COUNT LOOP
+         FOR J IN (SELECT SCALE_NO, GRADE_NO, BASIC_AMOUNT, GROSS_AMOUNT 
+                     FROM HRV_EMPDETAILS 
+                    WHERE EMP_NO = APEX_APPLICATION.G_F10(I)) LOOP
+            
+            -- SELECT NVL(MAX(EMPBONUS_ID), 1) + 1 INTO V_EMPBONUS_ID FROM HP_EMPBONUS;
+               INSERT INTO HP_EMPBONUS(
+                  EMPBONUS_ID,
+                  BONUS_ID,
+                  ALLOWANCE_ID,
+                  EMP_NO,
+                  DEPT_NO,
+                  BONUS_PCT,
+                  BONUS_AMT,
+                  BASIC_GROSS_FLAG,
+                  FIXED_PCT_FLAG,
+                  BONUS_DATE,
+                  REMARKS,
+                  SCALE_NO,
+                  GRADE_NO,
+                  BASIC_AMT,
+                  GROSS_AMT,
+                  ENTERED_BY,
+                  ENTRY_TIMESTAMP,
+                  UPDATE_BY,
+                  UPDATED_TIMESTAMP,
+                  COMPANY_NO,
+                  PAYROLL_FLAG,
+                  PAYROLL_MONTH,
+                  REQUIRED_FLAG,
+                  REQUIRED_BY,
+                  REQUIRED_DATE,
+                  VERIFIED_FLAG,
+                  VERIFIED_BY,
+                  VERIFIED_DATE,
+                  FINALIZED_FLAG,
+                  FINALIZED_BY,
+                  FINALIZED_DATE,
+                  CANCELLED_FLAG,
+                  CANCELLED_BY,
+                  CANCELLED_DATE,
+                  ACTIVE_STATUS
+               ) VALUES (
+                  EMPBONUS_SEQ.NEXTVAL,
+                  :P25_BONUS_ID, 
+                  :P25_ALLOWANCE_ID,  
+                  APEX_APPLICATION.G_F10(I), 
+                  :P25_DEPT_NO, 
+                  :P25_BONUS_PCT, 
+                  APEX_APPLICATION.G_F13(I),  -- You may need to correct this
+                  :P25_BASIC_GROSS_FLAG, 
+                  :P25_FIXED_PCT_FLAG, 
+                  :P25_BONUS_DATE, 
+                  :P25_REMARKS, 
+                  J.SCALE_NO, 
+                  J.GRADE_NO, 
+                  J.BASIC_AMOUNT, 
+                  J.GROSS_AMOUNT, 
+                  :SESSION_EMP_NO, 
+                  SYSDATE, 
+                  null, 
+                  null, 
+                  :SESSION_COMPANY_ID, 
+                  :P25_PAYROLL_FLAG, 
+                  :P25_PAYROLL_MONTH, 
+                  'Y', 
+                  null, 
+                  null, 
+                  'N', 
+                  null,
+                  null,
+                  'N',
+                  null,
+                  null,
+                  null,
+                  null, 
+                  null,
+                  'Y'
+               );
+            END LOOP;
+      END LOOP;
+   END IF;
+END;
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------
+check box update of update
+---------------------------------------------------------------------------------------------------------
+report
+----------------------------------------------------------------------
+SELECT UNIQUE E.CHD_SLNO, C.EMP_NO, D.NAME, D.USER_DEFINE_EMP_NO, D.DEPT_NAME, D.JOB_DESC, E.DEADLINE,
+APEX_ITEM.CHECKBOX2 (P_IDX         => 10,
+                                      P_VALUE        => E.CHD_SLNO,
+                                      P_ATTRIBUTES   => 'class="emp_check" onchange ="GetValues();"',
+                                      P_CHECKED_VALUES => :P25_COUNT) AS CKBOX,
+APEX_ITEM.TEXT (P_IDX         => 11,
+                                      P_VALUE        => E.REMARKS,
+                                      P_ATTRIBUTES   => 'class="emp_remarks" style="width: 100%;"'
+                                      ) AS REMARKS
+
+ FROM HR_EMPCLEARANCECHD E
+ RIGHT JOIN HR_EMPCLEARANCE C ON E.CLEARANCE_SLNO = C.CLEARANCE_SLNO 
+INNER JOIN HRV_EMPDETAILS D ON D.EMP_NO = C.EMP_NO
+WHERE EXISTS (
+    SELECT 'X' 
+    FROM HR_EMPCLEARANCE
+    WHERE CLEARANCE_FLAG = 'N'
+)
+
+
+
+
+
+ajax call back
+-----------------------------------------------------------------------------------
+IF APEX_APPLICATION.G_F10.COUNT <> 0
+      THEN
+         FOR I IN 1 .. APEX_APPLICATION.G_F10.COUNT
+         LOOP
+
+UPDATE HR_EMPCLEARANCECHD
+   SET CLEARANCE_FLAG = 'Y',
+       CLEARANCE_BY = :SESSION_EMP_NO,
+       CLEARANCE_TIMESTAMP = SYSDATE,
+       REMARKS = APEX_APPLICATION.G_F11(I)
+ WHERE CHD_SLNO = APEX_APPLICATION.G_F10(I);
+
+-- END LOOP;
+END LOOP;
+END IF;
+
+
+
+
+
+
+
+save dinamic action
+-------------------------------------------------------------------------------------
+var f10_array = [];
+var f11_array = [];
+
+$(".emp_check:checked").each(function () {
+    f10_array.push($(this).val());
+    f11_array.push($(this).closest("tr").find('Input[name="f11"]').val());
+    // f05_array.push($(this).closest("tr").find('Input[name="f05"]').val());
+});
+
+
+ apex.server.process(
+                "SAVE_DATA",
+                { 
+                f10: f10_array, f11: f11_array, pageItems: "#P41_EMP_NO"
+
+                 },
+                {
+                    dataType: "text",
+                    success: function (data) {
+                        apex.region("emp_dtl").refresh();
+                            const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            },
+                        });
+                        Toast.fire({
+                            icon: "success",
+                            title: "Successfully Saved!",
+                        });
+                    },
+                }
+            );
+
+
+
+
+INLINE
+------------------------------------------------------
+input.emp_remarks {
+    border-width: 0;
+    border: 0;
+    border: none;
+    border-style: none;
+    background: transparent;
+}

@@ -1,0 +1,34 @@
+https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css
+
+https://cdn.jsdelivr.net/npm/sweetalert2@11.4.0/dist/sweetalert2.all.min.js
+
+
+
+javascript:$s('P43_UPDATED_BILLING','#BILL_ID#');
+javascript:$s('P46_P_NAME','#P_NAME#');
+javascript:$s('P46_MOBILE_NO','#MOBILE_NO#');
+javascript:$s('P46_DATE_OF_BIRTH','#DATE_OF_BIRTH#');
+javascript:$s('P46_GENDER','#GENDER#');
+javascript:$s('P46_BLOOD_GROUP','#BLOOD_GROUP#');
+javascript:$s('P46_EMAIL','#EMAIL#');
+javascript:$s('P46_EMERGENCY_CONTACT_NAME','#EMERGENCY_CONTACT_NAME#');
+javascript:$s('P46_EMERGENCY_CONTACT_RELATION','#EMERGENCY_CONTACT_RELATION#');
+javascript:$s('P46_EMERGENCY_CONTACT_NO','#EMERGENCY_CONTACT_NO#');
+javascript:$s('P46_ADDRESS','#ADDRESS#');
+javascript:$s('P43_DOC_ID','#DOC_ID#');
+
+P46_EMERGENCY_CONTACT_RELATION
+
+
+
+javascript:$s('P43_DOC_ID2','#doc_id#');
+
+
+
+**edit icon code del code***
+
+<span class="fa fa-edit" aria-hidden="true"></span>
+
+<span aria-hidden="true" class="fa fa-trash-o"></span>
+
+<span class="fa fa-edit edit-final_id" style="color:green;" aria-hidden="true"><span style="display:none;">#FINAL_ID#</span></span>

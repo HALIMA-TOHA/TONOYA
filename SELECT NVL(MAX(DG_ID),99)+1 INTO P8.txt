@@ -1,0 +1,145 @@
+ active inactive first rejoin report under 
+---------------------------------------------------------
+
+
+     CASE
+           WHEN STATUS = 'N' THEN
+               '<a href="javascript:pageItem2(' ||          
+                   APEX_ESCAPE.JS_LITERAL( UI_ID) || ')">' ||
+               '<span class="subscribe" aria-hidden="true" style="font-size:12px;letter-spacing: .3px;display: inline-block;padding: .4rem .66666667rem;font-size: 89%;font-weight: 500;line-height: 1;border: 2px solid #fffde7;box-shadow: 0 5px 10px -3px rgb(0 0 0 / 23%), 0 6px 10px -5px rgb(0 0 0 / 25%);text-align: center;white-space: nowrap;vertical-align: baseline;padding-right:.6em;padding-left:.6em; border-radius: 10rem;background-image: linear-gradient(310deg,#17ad37,#98ec2d);color: #024d05;font-weight:bold">Inactive</span></a>'
+           ELSE
+               '<a href="javascript:pageItem2(' ||          
+                   APEX_ESCAPE.JS_LITERAL( UI_ID) || ')">' ||
+               '<span class="subscribe" aria-hidden="true" style="font-size:12px;letter-spacing: .3px;display: inline-block;padding: .4rem .66666667rem;font-size: 89%;font-weight: 500;line-height: 1;border: 2px solid #fffde7;box-shadow: 0 5px 10px -3px rgb(0 0 0 / 23%), 0 6px 10px -5px rgb(0 0 0 / 25%);text-align: center;white-space: nowrap;vertical-align: baseline;padding-right:.6em;padding-left:.6em; border-radius: 10rem;background-image: linear-gradient(310deg,#720800,#ff2616);color: #ffffff;font-weight:bold">Active</span></a>'
+
+    END AS ACTIVE_FLAG,
+
+
+--------------------------------------------------------
+
+JEI CLASSIC REPORT REJIONER UNDER BANACCHI REPORT TAKE SELECT KORE TAR SATATIC ID DIBO NAM J KONO THEN OI NAM TAI    JEI ITEM BANABO ACTIVE OITA AKTA DYNAMIC ACTION NIBO EXECUTE JAVA SCRIPT CODE SEI UNDER ------------------- CODER UNDER A MARBO LIKE NICHER CODER EI JAYGAY apex.region("RIMI").refresh();----------THNE JEI NEW DEFULT HOY ACTION MARLE OITAY  CLINE SIDE GIYE =>>>>>>ITEM IS NOT NULL DIYE DITE HOBE
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Swal.fire({
+        title: "Confirmation Alert !",
+        text: "Are you sure to change this active flag?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "YES, I do",
+        cancelButtonText: "NO",
+    }).then((result) => {
+        if (result.isConfirmed) {
+             apex.server.process(
+                "ajax_halima",
+                {
+                    pageItems: "#P19_ACTIVEE"
+                },
+                {
+                    dataType: "text",
+                    success: function (data) {
+                        apex.item("P19_ACTIVEE").setValue('');
+
+                        apex.region("RIMI").refresh();
+
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                            });
+
+                            Toast.fire({
+                            type: 'success',
+                            title: 'Successfully Updated!',
+                            
+  
+                        // Swal.fire({
+                        //     position: "top-end",
+                        //     icon: "success",
+                        //     title: "Transfer request successfully Updated",
+                        //     showConfirmButton: false,
+                        //     timer: 1000,
+                        });
+                    },
+                }
+            );
+         } 
+else {
+            // Your code for handling if the user clicks "NO"
+        }
+    });
+ 
+----------------------------------------------------GLOBAL A CODE MARBO -----------THEN COLUMN NAME AND BANANO ACTIVE SATAUS CINAY DEOA LAGBE 1ST LINE A 
+
+function pageItem2(APP_ID) { $s('P47_UPDATE_ACTIVE_STATUS', APP_ID );}
+
+var Alert = undefined;
+(function(Alert) {
+  var alert, success;
+  success = function(message, title, options) {
+    return alert("success", message, title, "fa fa-ban", options);
+  };
+  alert = function(type, message, title, icon, options) {
+    var alertElem, messageElem, titleElem, iconElem, innerElem, _container;
+    if (typeof options === "undefined") {
+      options = {};
+    }
+    options = $.extend({}, Alert.defaults, options);
+    if (!_container) {
+      _container = $("#alerts");
+      if (_container.length === 0) {
+        _container = $("<ul>").attr("id", "alerts").appendTo($("body"));
+      }
+    }
+    if (options.width) {
+      _container.css({
+        width: options.width
+      });
+    }
+      alertElem = $("<li>").addClass("alert").addClass("alert-" + type);
+      setTimeout(function() {
+         alertElem.addClass('open');
+      }, 1);
+    if (icon) {
+      iconElem = $("<i>").addClass(icon);
+      alertElem.append(iconElem);
+    }
+    innerElem = $("<div>").addClass("alert-block");
+    alertElem.append(innerElem);
+    if (title) {
+      titleElem = $("<div>").addClass("alert-title").append(title);
+      innerElem.append(titleElem);
+    }
+    if (message) {
+      messageElem = $("<div>").addClass("alert-message").append(message);
+      innerElem.append(messageElem);
+    }
+    if (options.displayDuration > 0) {
+      setTimeout((function() {
+        leave();
+      }), options.displayDuration);
+    } else {
+      innerElem.append("<em>Click to Dismiss</em>");
+    }
+    alertElem.on("click", function() {
+      leave();
+    });
+     function leave() {
+         alertElem.removeClass('open');
+          alertElem.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',  function() { return alertElem.remove(); });
+    }
+    return _container.prepend(alertElem);
+  };
+  Alert.defaults = {
+    width: "",
+    icon: "",
+    displayDuration: 3000,
+    pos: ""
+  };
+
+  Alert.success = success;
+  return _container = void 0;
+    
+})(Alert || (Alert = {}));
+

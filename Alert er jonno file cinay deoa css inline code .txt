@@ -1,0 +1,28 @@
+https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css
+
+https://cdn.jsdelivr.net/npm/sweetalert2@11.4.0/dist/sweetalert2.all.min.js
+
+
+
+javascript:$s('P28_EDIT','#PA_ID#');
+javascript:$s('P28_NAME','#NAME#');
+javascript:$s('P28_SHORT_NAME','#SHORT_NAME#');
+javascript:$s('P28_STATUS','#STATUS#');
+javascript:$s('P28_INSERT_BY','#INSERT_BY#');
+javascript:$s('P28_INSERT_DATE','#INSERT_DATE#');
+javascript:$s('P28_UPDATE_BY','#UPDATE_BY#');
+javascript:$s('P28_UPDATE_DATE','#UPDATE_DATE#');
+
+
+
+javascript:$s('P30_DEL','#CHILD_ID#');
+
+
+
+**edit icon code del code***
+
+<span class="fa fa-edit" aria-hidden="true"></span>
+
+<span aria-hidden="true" class="fa fa-trash-o"></span>
+
+<span class="fa fa-edit edit-final_id" style="color:green;" aria-hidden="true"><span style="display:none;">#FINAL_ID#</span></span>

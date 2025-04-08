@@ -1,0 +1,93 @@
+apex appointment token************code
+
+
+DECLARE 
+    V_CLOB CLOB;
+    
+    -- Cursor for clinic information
+    CURSOR CUR_CLINIC IS 
+        SELECT CLINIC_ID,
+               CLINIC_NAME,
+               ADDRESS,
+               PHONE_NO || ', ' || EMAIL || ', ' || WEBSITE AS CONTACT_INFO
+        FROM CLINIC_INFO
+        WHERE CLINIC_ID = 1;
+    
+    -- Cursor for appointment information
+    CURSOR CUR_APPOINTMENT(P_APP_ID NUMBER) IS 
+        SELECT 'A' || A.APP_ID AS APP_ID,
+               A.APP_DATE_TIME,
+               P.P_NAME,
+               P.MOBILE_NO, 
+               D.DOC_NAME, 
+               DD.DEPT_NAME, 
+               A.PATIENT_TYPE,
+               A.APP_SERIAL_NO,
+               A.INSERT_DATE,
+               A.INSERT_BY,
+               CASE 
+                   WHEN P.GENDER = 'F' THEN 'Female'
+                   WHEN P.GENDER = 'M' THEN 'Male'
+                   ELSE 'Other' 
+               END AS GENDER,
+               GET_AGE(P.DATE_OF_BIRTH) AS AGE
+        FROM APPOINTMENT_INFO A 
+        JOIN PATIENTS_REG_INFO P ON A.P_REG_ID = P.P_REG_ID
+        JOIN DOCTORS_INFO D ON A.DOC_ID = D.DOC_ID
+        JOIN DEPARTMENTS_INFO DD ON D.DEPT_ID = DD.DEPT_ID
+        WHERE A.APP_ID = :P58_APP_ID;
+    
+    -- Variables to store fetched records
+    V_CLINIC_REC CUR_CLINIC%ROWTYPE;
+    V_APPOINTMENT_REC CUR_APPOINTMENT%ROWTYPE;
+
+BEGIN
+    -- Fetch clinic details
+    OPEN CUR_CLINIC;
+    FETCH CUR_CLINIC INTO V_CLINIC_REC;
+    CLOSE CUR_CLINIC;
+
+    -- Fetch appointment details using P58_APP_ID
+    OPEN CUR_APPOINTMENT(:P58_APP_ID);
+    FETCH CUR_APPOINTMENT INTO V_APPOINTMENT_REC;
+    CLOSE CUR_APPOINTMENT;
+
+    -- Construct the HTML content
+    V_CLOB := '
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px; text-align: center; }
+        .token-card { width: 380px; margin: auto; background: #fff; padding: 20px; border-radius: 10px;
+                      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15); border: 2px dashed #007bff; }
+        .clinic-name { font-size: 22px; font-weight: bold; color: #007bff; margin-bottom: 5px; }
+        .clinic-address { font-size: 14px; color: #666; margin-bottom: 15px; }
+        .token-header { font-size: 18px; font-weight: bold; color: #28a745; margin-bottom: 10px; }
+        .token-id { font-size: 26px; font-weight: bold; color: #dc3545; border: 2px solid #dc3545; display: inline-block; padding: 5px 15px; border-radius: 5px; }
+        .appointment-info { font-size: 16px; color: #444; margin-top: 15px; text-align: left; padding: 0 10px; }
+        .serial-number { font-size: 20px; font-weight: bold; color: #ff9800; }
+        .hr-line { width: 80%; margin: 15px auto; border: 1px dashed #ccc; }
+    </style>
+
+    <div class="token-card">
+        <div class="clinic-name">' || V_CLINIC_REC.CLINIC_NAME || '</div>
+        <div class="clinic-address">' || V_CLINIC_REC.ADDRESS || '</div>
+
+        <div class="token-header">Appointment Token</div>
+        <div class="token-id">ID: ' || V_APPOINTMENT_REC.APP_ID || '</div>
+
+        <div class="appointment-info">
+            <p><b>Appointment Date:</b> ' || TO_CHAR(V_APPOINTMENT_REC.APP_DATE_TIME, 'DD-MON-YYYY HH24:MI') || '</p>
+            <div class="hr-line"></div>
+            <p><b>👤 Patient:</b> ' || V_APPOINTMENT_REC.P_NAME || '</p>
+            <p><b>🩺 Doctor:</b> ' || V_APPOINTMENT_REC.DOC_NAME || '</p>
+            <p><b>🏥 Department:</b> ' || V_APPOINTMENT_REC.DEPT_NAME || '</p>
+            <p class="serial-number">Serial No: ' || V_APPOINTMENT_REC.APP_SERIAL_NO || '</p>
+            <p><b>Patient Type:</b> ' || V_APPOINTMENT_REC.PATIENT_TYPE || '</p>
+            <p><b>🚻 Gender:</b> ' || V_APPOINTMENT_REC.GENDER || '</p>
+            <p><b>🎂 Age:</b> ' || V_APPOINTMENT_REC.AGE || ' years</p>
+            <p><b>📞 Contact:</b> ' || V_APPOINTMENT_REC.MOBILE_NO || '</p>
+        </div>
+    </div>
+    ';
+
+    RETURN V_CLOB;
+END;

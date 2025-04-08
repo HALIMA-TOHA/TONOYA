@@ -1,0 +1,20 @@
+*********************sir Cheak box task sir **********************
+
+
+first jei classic repot nibo rejoin a tar sathe add korbo ei code like 
+----------------------------------------------------------------------------
+select ROLL,
+       NAME,
+       APEX_ITEM.CHECKBOX(1, ROLL,DECODE(RESULT, 'P', 'CHECKED', NULL)) CHECKBOX
+    ---   RESULT,
+  from STUDENTS
+-----------------------------------------------------
+then prosses a akta loop  dibo like 
+------------------------------------
+
+For i in 1..APEX_APPLICATION.G_F01.COUNT LOOP
+ UPDATE STUDENTS 
+ SET RESULT = 'P'
+ WHERE ROLL = TO_NUMBER(APEX_APPLICATION.G_F01(i));
+END LOOP;
+

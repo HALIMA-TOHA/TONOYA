@@ -1,0 +1,19 @@
+
+
+ ********kono id neded hole join chara o sub query diye ana jay**********
+
+
+
+select USER_GROUP_ID,
+(select USER_NAME from guser
+where user_id = c.user_id)
+       USER_ID,
+       GROUP_ID,
+       ACTIVE_FLAG,
+       COMPANY_ID,
+       CREATE_BY,
+       CREATE_DATE,
+       UPDATE_BY,
+       UPDATE_DATE
+  from USER_GROUP c 
+ where "USER_GROUP_ID" = :P51_USER_GROUP_ID

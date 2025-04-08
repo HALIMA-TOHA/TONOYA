@@ -1,0 +1,110 @@
+
+billing group report
+
+
+DECLARE
+ V_OUTPUT CLOB;
+ CURSOR bill_INFO (P_DOC IN NUMBER) IS
+ SELECT
+    TO_CHAR(B.BILL_ID) AS BILL_ID,
+    B.bill_DATE,
+    P.P_NAME,
+    A.PATIENT_TYPE,
+    emr_pkg.get_doc(B.doc_id) doc_name, b.doc_id,
+    B.DISCOUNT_PCT,
+    NVL(B.NET_AMOUNT, 0) AS NET_AMOUNT,
+    NVL(B.TOTAL, 0) AS TOTAL,
+    NVL(B.DISCOUNT_AMOUNT, 0) AS DISCOUNT_AMOUNT,
+    NVL(B.RECEIVE_AMOUNT, 0) AS RECEIVE_AMOUNT,
+    NVL(B.RETURN_OR_DUE_AMT, 0) AS RETURN_OR_DUE_AMT
+ FROM
+    APPOINTMENT_INFO A
+ JOIN
+    PATIENTS_REG_INFO P ON A.P_REG_ID = P.P_REG_ID
+ JOIN
+    BILLING B ON A.APP_ID = B.APP_ID
+ WHERE
+    trunc(B.bill_DATE) >= to_date(:P64_F, 'MM/DD/YYYY')
+    AND trunc(B.bill_DATE) <= to_date(:P64_TO, 'MM/DD/YYYY')
+    and b.doc_id = P_DOC
+    and a.patient_type = nvl(:P64_TYPE, a.patient_type)
+    and b.doc_id = nvl(:P64_DOC_ID, b.doc_id)
+
+ ORDER BY
+   B.BILL_ID DESC,
+    B.bill_DATE ASC;
+
+
+     v_rep_total number := 0;
+
+        cursor doc_CUR is
+        select distinct(doc_id), emr_pkg.GET_DOC(doc_id) doc_name
+        from billing
+        WHERE RETURN_OR_DUE_AMT IS NOT NULL
+        AND  RECEIVE_AMOUNT IS NOT NULL
+        AND  DISCOUNT_AMOUNT IS NOT NULL
+    and doc_id = nvl(:P64_DOC_ID, doc_id)
+        order by 1 asc;
+
+v_doc varchar2(100);
+
+
+ V_START_DT VARCHAR2(50) := TO_CHAR(TO_DATE(:P64_F, 'MM/DD/YYYY'), 'DD-MON-YYYY');
+ V_END_DT VARCHAR2(50) := TO_CHAR(TO_DATE(:P64_TO, 'MM/DD/YYYY'), 'DD-MON-YYYY');
+
+BEGIN
+
+/*select doc_name into v_doc
+from doctors_info
+where doc_id = :P41_DOC_ID;*/
+ V_OUTPUT := V_OUTPUT|| '<DIV ALIGN=CENTER>
+                <h3> Bill Topsheet </h3> <BR>
+                From: '||V_START_DT||' To: '||V_END_DT||'<br>
+               
+              </DIV>
+              <br>';
+            FOR J IN doc_CUR LOOP
+  V_OUTPUT := V_OUTPUT||'
+  <table border=1 style="border-collapse: collapse;" width=100%>
+  <tr> <td colspan= 7>
+Doctor: '||J.DOC_NAME||'</td></tr>
+              
+              <tr>
+                <th>Invoice No.</th>
+                <TH>Bill Date</th>
+                <th>Patient</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Discount</th>
+                <th>Total</th>
+              </tr>';
+
+ FOR I IN bill_INFO(J.DOC_ID) LOOP
+   V_OUTPUT := V_OUTPUT||'
+         <tr>
+          <td ALIGN= CENTER>'||I.BILL_ID||'</td>
+          <td>'||to_char(i.bill_date,'dd-Mon-RRRR')||'</td>
+          <td>'||I.P_NAME||'</td>
+          <td>'||I.PATIENT_TYPE||'</td>
+          <td ALIGN= RIGHT style="padding: 5px;">'||NVL(I.NET_AMOUNT, 0)||'</td>
+          <td ALIGN= RIGHT style="padding: 5px;">'||NVL(I.DISCOUNT_PCT, 0)||'</td>
+          <td ALIGN= RIGHT style="padding: 5px;">'||NVL(I.TOTAL, 0)||'</td>
+         </tr>';
+
+
+v_rep_total := v_rep_total + I.TOTAL;
+
+ END LOOP;
+ v_output := V_OUTPUT||'<tr><td colspan=6 align=right><b>Total:</b></td><td><b>'||v_rep_total||'</b></td></tr>';
+
+END LOOP;
+ v_output := V_OUTPUT||'<tr><td colspan=6 align=right><b>Report Total:</b></td><td><b>'||v_rep_total||'</b></td></tr>
+
+ </table>';
+
+ RETURN V_OUTPUT;
+
+EXCEPTION
+ WHEN OTHERS THEN
+ RETURN 'Error: '||SQLERRM;
+END;

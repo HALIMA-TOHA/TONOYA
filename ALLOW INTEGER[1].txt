@@ -1,0 +1,53 @@
+********NUMBER FIELD A CHARACTER NA LIKHAR JONNO ALERT *********
+
+
+
+
+global variable 
+-------------------------
+$(".allow-integer").bind("keypress", function (e) {
+          var keyCode = e.which ? e.which : e.keyCode  
+            if (keyCode == 13) {
+        return true;
+    }
+          if (!(keyCode >= 48 && keyCode <= 57)) {
+            return false;
+          }
+    else{
+          }
+      });
+
+
+Item
+-----------------------------
+Advance
+----------------------------
+CSS classes
+----------------------------
+allow-integer
+
+
+
+OHTERS METHOD
+----------------------------------------------------
+
+GLOBAL VARIABLE 
+------------------
+function isNumberKey(evt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+}
+
+
+CUSTOM ATTRIBUTE
+--------------------
+onkeypress="return isNumberKey(event)"
+
+
+
+
+
+

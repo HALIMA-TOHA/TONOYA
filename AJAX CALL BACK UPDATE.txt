@@ -1,0 +1,120 @@
+ajax code
+---------------------------------
+IF APEX_APPLICATION.G_F10.COUNT <> 0
+      THEN
+         FOR I IN 1 .. APEX_APPLICATION.G_F10.COUNT
+         LOOP
+            FOR J IN (SELECT CHECKLIST_NO,
+                             CHECKLIST_NAME,
+                             CLEARANCE_FROM_DEPT,
+                             ACTIVE,
+                             REMARKS
+                        FROM HR_CLEARANCECHECKLIST
+                       WHERE CHECKLIST_NO = APEX_APPLICATION.G_F10 (I))
+            LOOP
+               PRC_BUILD_PK (' ',
+                             'HR_EMPCLEARANCECHD_SEQ',
+                             '',
+                             1,
+                             V_PK_ID);
+
+               INSERT INTO HR_EMPCLEARANCECHD (CHD_SLNO,
+                                               CHECKLIST_NO,
+                                               CLEARANCE_SLNO,
+                                               CLEARANCE_FROM_DEPT,
+                                               CLEARANCE_FLAG,
+                                               CLEARANCE_BY,
+                                               CLEARANCE_TIMESTAMP,
+                                               REMARKS,
+                                               COMPANY_NO,
+                                               ENTERED_BY,
+                                               ENTRY_TIMESTAMP,
+                                               DEADLINE)
+                    VALUES (V_PK_ID,--CHD_SLNO,
+                             APEX_APPLICATION.G_F10 (I),--CHECKLIST_NO,
+                            V_ID, --NULL,--CLEARANCE_SLNO,
+                            J.CLEARANCE_FROM_DEPT,--CLEARANCE_FROM_DEPT
+                            'N',--CLEARANCE_FLAG,
+                            NULL,--CLEARANCE_BY,
+                            NULL,--CLEARANCE_TIMESTAMP,
+                            J.REMARKS,--REMARKS
+                            :SESSION_COMPANY_ID,--COMPANY_NO,
+                            :SESSION_EMP_NO,--ENTERED_BY,
+                            SYSDATE,--ENTRY_TIMESTAMP);
+                            NVL(:P26_DEADLINE,V_DATE));--NULL);--DEADLINE);
+            END LOOP;
+         END LOOP;
+      END IF;
+   END IF;
+   EXCEPTION WHEN OTHERS THEN 
+            HTP.P('Please contact to your developer.');
+END;
+
+
+ajax call back
+-----------------------------------------------------------------------------------
+IF APEX_APPLICATION.G_F10.COUNT <> 0
+      THEN
+         FOR I IN 1 .. APEX_APPLICATION.G_F10.COUNT
+         LOOP
+
+UPDATE HR_EMPCLEARANCECHD
+   SET CLEARANCE_FLAG = 'Y',
+       CLEARANCE_BY = :SESSION_EMP_NO,
+       CLEARANCE_TIMESTAMP = SYSDATE,
+       REMARKS = APEX_APPLICATION.G_F11(I)
+ WHERE CHD_SLNO = APEX_APPLICATION.G_F10(I);
+
+-- END LOOP;
+END LOOP;
+END IF;
+
+
+
+
+
+
+
+save dinamic action
+-------------------------------------------------------------------------------------
+var f10_array = [];
+var f11_array = [];
+
+$(".emp_check:checked").each(function () {
+    f10_array.push($(this).val());
+    f11_array.push($(this).closest("tr").find('Input[name="f11"]').val());
+    // f05_array.push($(this).closest("tr").find('Input[name="f05"]').val());
+});
+
+
+ apex.server.process(
+                "SAVE_DATA",
+                { 
+                f10: f10_array, f11: f11_array, pageItems: "#P41_EMP_NO"
+
+                 },
+                {
+                    dataType: "text",
+                    success: function (data) {
+                        apex.region("emp_dtl").refresh();
+                            const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            },
+                        });
+                        Toast.fire({
+                            icon: "success",
+                            title: "Successfully Saved!",
+                        });
+                    },
+                }
+            );
+
+
+

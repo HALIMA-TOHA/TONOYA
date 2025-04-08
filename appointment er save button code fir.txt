@@ -1,0 +1,212 @@
+**************************appointment er save button code first insert app reg then appointmen**********
+
+
+
+DECLARE 
+
+	V_ALERT NUMBER;
+BEGIN
+	  	V_ALERT:= SHOW_ALERT('SAVE');
+    --Fetch the new P_REG_ID
+  
+IF   V_ALERT=ALERT_BUTTON1 THEN
+	DECLARE
+    v_doc_id      NUMBER;
+    v_day         VARCHAR2(10);
+    v_available   NUMBER;
+BEGIN
+
+    -- Ensure the doctor ID is not null
+    v_doc_id := :APPOINTMENT_INFO_STAC.DOC_ID;
+
+    -- Get the day of the week from the selected date
+    v_day := UPPER(TO_CHAR(:APPOINTMENT_INFO_STAC.APP_DATE_TIME, 'DY'));
+
+    -- Fetch the doctor's availability for the selected day
+ BEGIN
+        SELECT CASE 
+                 WHEN v_day = 'SAT' THEN SAT
+                 WHEN v_day = 'SUN' THEN SUN
+                 WHEN v_day = 'MON' THEN MON
+                 WHEN v_day = 'TUE' THEN TUE
+                 WHEN v_day = 'WED' THEN WED
+                 WHEN v_day = 'THU' THEN THU
+                 WHEN v_day = 'FRI' THEN FRI
+               END
+        INTO v_available
+        FROM DOCS_AV_DAY
+        WHERE DOC_ID = v_doc_id;
+
+        -- Validate if the doctor is available
+        IF v_available = 0 THEN
+            MESSAGE('Error: Doctor is not available on the selected day.');
+            RAISE FORM_TRIGGER_FAILURE;
+        END IF;
+
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            -- Handle case where no record exists for the doctor
+            MESSAGE('Error: No availability record found for the doctor.');
+            RAISE FORM_TRIGGER_FAILURE;
+    END;
+
+   
+EXCEPTION
+    WHEN OTHERS THEN
+        -- Handle any unexpected errors
+        MESSAGE('Error: An unexpected error occurred: ' || SQLERRM);
+        RAISE FORM_TRIGGER_FAILURE;
+END;
+    
+	IF 
+		--:APPOINTMENT_INFO_STAC.APP_SERIAL_NO IS NOT NULL AND
+		 :APPOINTMENT_INFO_STAC.DOC_ID IS NOT NULL AND :APPOINTMENT_INFO_STAC.APP_DATE_TIME IS NOT NULL 
+	AND :APPOINTMENT_INFO_STAC.MOBILE_NO IS NOT NULL
+	-- AND :APPOINTMENT_INFO_STAC.P_REG_ID IS NOT NULL
+	THEN 
+   -- Insert the new record if necessary
+   IF :APPOINTMENT_INFO_STAC.INSERT = 'Y' THEN
+   	SELECT NVL(MAX(P_REG_ID), 0) + 1 
+   INTO :APPOINTMENT_INFO_STAC.P_REG_ID
+   FROM PATIENTS_REG_INFO;
+   
+      INSERT INTO PATIENTS_REG_INFO (P_REG_ID, P_NAME, MOBILE_NO)
+      VALUES (:APPOINTMENT_INFO_STAC.P_REG_ID, :APPOINTMENT_INFO_STAC.P_REG_NAME, :APPOINTMENT_INFO_STAC.MOBILE_NO);
+
+  
+   END IF;
+   -- Commit the form, navigate, and execute the query, regardless of insert
+   COMMIT;
+   	 MESSAGE('Saved successfully');
+   GO_BLOCK('APPOINTMENT_INFO_STAC');
+   commit_FORM;
+   update APPOINTMENT_INFO
+   set insert_date = sysdate 
+   where APP_ID = APPOINTMENT_INFO.APP_ID;
+
+
+
+
+
+
+***********************billingview*****************
+
+
+
+BEGIN
+:BILLING.BILL_ID:= BILLING_SEQ.NEXTVAL;
+:BILLING.BILL_DATE:=SYSDATE;
+:BILLING.DOC_ID:=:BILLINGVIEW.DOC_ID;
+:BILLING.DISCOUNT_PCT:=NULL;
+:BILLING.PATIENT_NAME := :BILLINGVIEW.P_NAME;
+--:BILLING.NET_AMOUNT:=(SELECT NET_AMOUNT FROM BILLING WHERE PATIENT_TYPE =:BILLINGVIEW.PATIENT_TYPE);
+:BILLING.DOC_NAME := :BILLINGVIEW.ITEM202;
+:BILLING.PATIENT_TYPE:=:BILLINGVIEW.ITEM203;
+:BILLING.APP_ID:=:BILLINGVIEW.APP_ID;
+:BILLING.NURSE_ST_ID:=:BILLINGVIEW.NURSE_ST_ID;
+GO_BLOCK('BILLING');
+EXCEPTION WHEN OTHERS THEN NULL;
+END;
+
+SELECT MAX(RATE)
+INTO :BILLING.NET_AMOUNT
+FROM DOC_SERVICES
+WHERE PATIENT_TYPE =:BILLINGVIEW.ITEM203 
+AND DOC_ID=:BILLINGVIEW.DOC_ID;
+***************************************************************billing save dile nurse staion a jabe ****************
+
+UPDATE NURSE_STATION SET
+BILLING_FLAG = 'P'
+WHERE NURSE_ST_ID = :BILLING.NURSE_ST_ID;
+COMMIT;
+GO_BLOCK('BILLINGVIEW');
+EXECUTE_QUERY;
+************************************************************EMR***************SAVE
+UPDATE NURSE_STATION SET
+BILLING_FLAG = 'P'
+WHERE NURSE_ST_ID = :BILLING.NURSE_ST_ID;
+COMMIT;
+GO_BLOCK('BILLINGVIEW');
+EXECUTE_QUERY;
+**************************************************IN CHEAK ER CODE WAITTING THEKE**********
+
+BEGIN
+SELECT app_id--,P_NAME,p_reg_id,NURSE_ST_ID,VISIT_DATE
+
+INTO :CONSULTATION.APP_ID --:CONSULTATION.APP_ID,:PRE_CONSULT_INFO.P_NAME,:CONSULTATION.P_REG_ID,
+--:CONSULTATION.NURSE_ST_ID,:CONSULTATION.INSERT_DATE
+FROM CONSULTAION_LOV
+WHERE APP_ID = :DOC_WAITING_LIST.APP_ID;
+END;
+
+Go_block('CONSULTATION'); 
+  IF :CONSULTATION.APP_ID IS NOT NULL THEN
+        	 GO_BLOCK('PRE_CONSULT_INFO');
+        	 EXECUTE_QUERY;
+        END IF;
+
+--GO_BLOCK('PRE_CONSULT_INFO');
+
+***********************************************VIEW NURSE STAIONT THEKE IN CHEAK ER CODE*************
+
+
+
+
+DECLARE 
+	V_ALERT NUMBER;
+	v_name varchar2(100);
+BEGIN
+	v_name:= :GLOBAL.USERNAME;
+	
+IF 	 :VIEW_NURSE_STAION.IN = 'Y' THEN
+	 INSERT INTO NURSE_STATION (NURSE_ST_ID, VISIT_DATE, IN_FLAG, APP_ID,INSERT_BY,INSERT_DATE)
+   VALUES (NURSE_STATION_SEQE.NEXTVAL, SYSDATE, 1, :VIEW_NURSE_STAION.APP_ID,v_name,sysdate
+);
+UPDATE APPOINTMENT_INFO
+SET PATIENT_TYPE =:VIEW_NURSE_STAION.PATIENT_TYPE
+WHERE APP_ID =:VIEW_NURSE_STAION.APP_ID;
+	
+	V_ALERT:= SHOW_ALERT('SAVE');
+	IF V_ALERT=ALERT_BUTTON1 THEN
+ COMMIT_FORM;
+ MESSAGE('Save Successfully');
+GO_BLOCK('VIEW_NURSE_STATION');
+EXECUTE_QUERY;
+	ELSE NULL;
+		END IF;
+	END IF;
+	END;
+
+**********************************NURSE STAION OUT FLAG CODE***************
+IF NVL(:NURSE_STATION.OUT_FLAG,'N') = 'N' THEN
+UPDATE NURSE_STATION
+SET OUT_FLAG = 'Y'
+WHERE NURSE_ST_ID= :NURSE_STATION.NURSE_ST_ID;
+END IF;
+
+
+************************NURSE STAION CHECK BOX CODE**********
+IF NVL(:NURSE_STATION.CONSULT_FLAG,'N') = 'N' THEN
+UPDATE NURSE_STATION
+SET CONSULT_FLAG = 'Y',VISIT_DATE=SYSDATE
+WHERE NURSE_ST_ID= :NURSE_STATION.NURSE_ST_ID;
+END IF;
+***********************************************************NURSE STAION ********VITAL SIGN BUTTON CODE*******
+
+:PRIMARY_ASSESSMENT.NURSE_ST_ID_ASSESMENT := :NURSE_STATION.NURSE_ST_ID;
+:NURSE_STATION.PATIENT_NAME:= :PRIMARY_ASSESSMENT.PATIENT_NAME;
+GO_BLOCK('PRIMARY_ASSESSMENT');
+EXECUTE_QUERY;
+*********************************************POST CHANGE*****************
+SELECT P_NAME
+  INTO :PRIMARY_ASSESSMENT.PATIENT_NAME
+  FROM PATIENTS_REG_INFO
+ WHERE P_REG_ID =
+       (SELECT P_REG_ID
+          FROM APPOINTMENT_INFO
+         WHERE APP_ID =
+               (SELECT APP_ID
+                  FROM NURSE_STATION
+                 WHERE NURSE_ST_ID =
+                       :PRIMARY_ASSESSMENT.NURSE_ST_ID_ASSESMENT))
+   
